@@ -1,4 +1,4 @@
-DataSet																	()				
+DataSet																	(Mariam - Gamal)				
 	DataNum
 		LOAD - CSV PICKLE
 		SAVE - CSV PICKLE
@@ -17,8 +17,9 @@ DataSet																	()
 		GetData
 		Plot
 --------------------------------------------------------------------------------
-NN  : From Meduim Article https://towardsdatascience.com/how-to-build-a-diy-deep-learning-framework-in-numpy-59b5b618f9b7	()
-Opt : From Meduim Article https://towardsdatascience.com/how-to-build-a-diy-deep-learning-framework-in-numpy-59b5b618f9b7	()
+NN  : From Meduim Article https://towardsdatascience.com/how-to-build-a-diy-deep-learning-framework-in-numpy-59b5b618f9b7	(Adel - Mar - Yass)
+Opt : From Meduim Article https://towardsdatascience.com/how-to-build-a-diy-deep-learning-framework-in-numpy-59b5b618f9b7	(Gamal - Bondok - Ashraf)
+Vis : know matplotlib limits (Abduallah) + Python
 --------------------------------------------------------------------------------
 
 Docs:		we will use http://epydoc.sourceforge.net/epytext.html
