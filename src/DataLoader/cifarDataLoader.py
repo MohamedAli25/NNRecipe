@@ -6,6 +6,11 @@ class CifarDataLoader(DataLoader):
         pass
 
     def load(self, download=False):
+        """
+        Func
+        :param download:
+        :type download: bool
+        """
         pass
 
     def getData(self):
