@@ -37,7 +37,7 @@ Network:
 Layer:
 	initParams
 	loadParams
-	backword
+	backward
 	forward
 
 ----------------------------------------------------------------
