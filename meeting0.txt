@@ -38,7 +38,7 @@ Network:
 Layer:
 	initParams
 	loadParams
-	compute
+	__call__
 	get_local_grad
 
 Optimizer:

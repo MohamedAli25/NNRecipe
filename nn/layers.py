@@ -20,7 +20,7 @@ class Function(abc.ABC):
         pass
     
     @property
-    def local_grad(self, *args, **kwargs):
+    def local_grad(self):
         return self._local_grad
 
     @local_grad.setter
@@ -32,12 +32,16 @@ class Function(abc.ABC):
 class Layer(Function):
     def __init__(self, in_dim, out_dim):
         super().__init__()
-        self.init_params(in_size, layer_size)
-
-    def _init_params(self, *args, **kwargs):
         self._params = {}
         self.params_update = {}
 
+    def _init_params(self, *args, **kwargs):
+        pass
+    
+    def update_params(self, *args, **kwargs):
+        pass
+    
+    # @property
     def load_params(self, *args, **kwargs):
         pass
  
@@ -46,6 +50,18 @@ class Linear(Layer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         pass
+    
+    def _init_params(self, x):
+        pass
+
+    def forward(self, x):
+        pass
+
+    def backward(self, dL):
+        pass
+
+    def local_grad(self, x):
+        pass
 
 
 class Flatten(Function):
@@ -53,7 +69,7 @@ class Flatten(Function):
         self.cache['shape'] = X.shape     
         return X.reshape(X.shape[0], -1)
 
-    def backward(self, dY):
+    def backward(self, dL):
         return dY.reshape(self.cache['shape'])
 
 
@@ -61,11 +77,21 @@ class BatchNorm2D(Layer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         pass
-
-    
+    # def _init_params():
+    #     pass
+    def forward(self, x):
+        pass
+    def backward(self, dL):
+        pass
 class MaxPool2D(Function):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        pass
+    def forward(self, x):
+        pass
+    def backward(self, dL):
+        pass
+    def local_grad():
         pass
 
 
@@ -73,10 +99,20 @@ class AvgPool2D(Function):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         pass
-
+    def forward(self, x):
+        pass
+    def backward(self, dL):
+        pass
+    def local_grad():
+        pass
 
 class Conv2D(Layer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         pass
-
+    def forward(self, x):
+        pass
+    def backward(self, dL):
+        pass
+    def local_grad():
+        pass

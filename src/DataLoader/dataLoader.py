@@ -1,3 +1,11 @@
+import gzip
+import os
+import pickle
+import tarfile
+import urllib.request
+import zipfile
+
+
 class DataLoader:
     def __init__(self):
         pass
