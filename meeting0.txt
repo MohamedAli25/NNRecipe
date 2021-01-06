@@ -1,6 +1,6 @@
 from opt import Sigmoid, Relu
 
-n  = Network()
+n  = Network(loss=LossFunc())
 l0 = Layer(activate=Sigmoid, size=6)
 l1 = Layer(activate=Relu, size=2)
 l2 = Layer(activate=Relu, size=2)
@@ -25,7 +25,8 @@ Network:
 	addLyaers
 	setOutputLayer
 	setOptimizer
-	srtFlags
+	setFlags
+	setLossFunction
 	train
 	save
 	compute
@@ -37,9 +38,11 @@ Network:
 Layer:
 	initParams
 	loadParams
-	backward
-	forward
+	compute
+	get_local_grad
 
+Optimizer:
+	
 ----------------------------------------------------------------
 DataLoader
 	# support .csv, images
