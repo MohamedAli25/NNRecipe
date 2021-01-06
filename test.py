@@ -18,7 +18,7 @@ l = Layer(
     layer_size=4,
     (optional) activation=Identity(),
     (optional) weights_range=(max, min),
-    (optional) wieghts_dist=Dist_Type
+    (optional) weights_dist=Dist_Type
 )
 
 y = l(X)
@@ -32,7 +32,7 @@ class Optimizer(ABC):
     def optimize(layer:Layer, global_grad):
         pass
 
-class GCD(Optimizer):
+class SGD(Optimizer):
     def __init__(self):
         super().__init__()
 
