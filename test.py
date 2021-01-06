@@ -62,9 +62,9 @@ yhat = l2(y1)
 
 global_grad = l2.local_grad
 opt.optimize(l2, global_grad)
-global_grad *= l1.local_grad
+global_grad = calc_glob_grad(l1.local_grad, global_grad)
 opt.optimize(l1, global_grad)
-global_grad *= l0.local_grad
+global_grad = calc_glob_grad(l0.local_grad, global_grad)
 opt.optimize(l0, global_grad)
 
 Sigmoid----
