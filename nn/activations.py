@@ -20,7 +20,7 @@ def ReLU(x):
 def ReLU_drv(x):
     return (x > 0).astype(x.dtype)      # or np.maximum(0, x)
 
-def LeakyReLU(x):
+def LeakyReLU(x,lr):
     return np.where(x > 0, x, x * lr)
 
 def LeakyReLU_drv(x, lr=0.01):

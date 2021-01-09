@@ -70,7 +70,7 @@ class Flatten(Function):
         return X.reshape(X.shape[0], -1)
 
     def backward(self, dL):
-        return dY.reshape(self.cache['shape'])
+        return dL.reshape(self.cache['shape'])
 
 
 class BatchNorm2D(Layer):
@@ -91,7 +91,7 @@ class MaxPool2D(Function):
         pass
     def backward(self, dL):
         pass
-    def local_grad():
+    def local_grad(self):
         pass
 
 
@@ -103,7 +103,7 @@ class AvgPool2D(Function):
         pass
     def backward(self, dL):
         pass
-    def local_grad():
+    def local_grad(self):
         pass
 
 class Conv2D(Layer):
@@ -114,5 +114,5 @@ class Conv2D(Layer):
         pass
     def backward(self, dL):
         pass
-    def local_grad():
+    def local_grad(self):
         pass
