@@ -67,11 +67,11 @@ class Linear(Layer):
 
 class Flatten(Function):
     def forward(self, X):
-        self.cache['shape'] = X.shape     
+        self._cache['shape'] = X.shape
         return X.reshape(X.shape[0], -1)
 
     def backward(self, dL):
-        return dL.reshape(self.cache['shape'])
+        return dL.reshape(self._cache['shape'])
 
 
 class BatchNorm2D(Layer):
