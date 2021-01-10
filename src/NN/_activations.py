@@ -1,11 +1,13 @@
-from layers import Function
+"""
+Helper functions for activation functions
+"""
 import numpy as np
 
 def sigmoid(x):
     """
     Returns the sigmoid funciton @ the input x
     """
-    return 1/(1+np.exp(-x))
+    return 1/(1 + np.exp(-x))
 
 def sigmoid_drv(x):
     """
@@ -14,16 +16,16 @@ def sigmoid_drv(x):
     s = sigmoid(x)
     return s * (1 - s)
 
-def ReLU(x):
-    return x * (x > 0).astype(x.dtype)  # or x * np.maximum(0, x)
+def relu(x):
+    return np.maximum(0, x)          # x * (x > 0).astype(x.dtype)
 
-def ReLU_drv(x):
-    return (x > 0).astype(x.dtype)      # or np.maximum(0, x)
+def relu_drv(x):
+    return (x > 0).astype(x.dtype)      
 
-def LeakyReLU(x,lr):
+def leaky_relu(x, lr=0.01):
     return np.where(x > 0, x, x * lr)
 
-def LeakyReLU_drv(x, lr=0.01):
+def leaky_relu_drv(x, lr=0.01):
     dx = np.ones_like(x)
     dx[x < 0] = lr
     return dx
@@ -45,20 +47,7 @@ def hard_tanh_drv(x):
     X[X>=-1 and X<1] = 1
     return X
 
-def Softmax(x):
+def softmax(x):
     total = np.sum(np.exp(x), axis=1, keepdims=True)
     return (np.exp(x) / total)
 
-
-class Sigmoid(Function):
-    def __init__(self, *args, **kwargs):
-        pass
-    
-    def forward(self, x):
-        return sigmoid(x)
-
-    def backward(self, x):
-        pass
-
-    def local_grad(self, x):
-        pass

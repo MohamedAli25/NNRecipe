@@ -1,32 +1,33 @@
 from __future__ import annotations
 import numpy as np
-import abc
+from abc import ABC
+from function import Function
 
-class Function(abc.ABC):
-    def __init__(self, *args, **kwargs):
-        # caching
-        self.cache = {}
-        self.grad = {}
+# class Function(ABC):
+#     def __init__(self, *args, **kwargs):
+#         # caching
+#         self.cache = {}
+#         self.grad = {}
 
-    def __call__(self, *args, **kwargs):
-        out = self.forward()
-        self._local_grad = self.local_grad(*args, **kwargs)
-        return out
+#     def __call__(self, *args, **kwargs):
+#         out = self.forward()
+#         self._local_grad = self.local_grad(*args, **kwargs)
+#         return out
 
-    def forward(self, *args, **kwargs):
-        pass
+#     def forward(self, *args, **kwargs):
+#         pass
 
-    def backward(self, *args, **kwargs):
-        pass
+#     def backward(self, *args, **kwargs):
+#         pass
     
-    @property
-    def local_grad(self):
-        return self._local_grad
+#     @property
+#     def local_grad(self):
+#         return self._local_grad
 
-    @local_grad.setter
-    def local_grad(self, *args, **kwargs):
-        # calculate local grad
-        pass
+#     @local_grad.setter
+#     def local_grad(self, *args, **kwargs):
+#         # calculate local grad
+#         pass
 
 
 class Layer(Function):
@@ -83,6 +84,8 @@ class BatchNorm2D(Layer):
         pass
     def backward(self, dL):
         pass
+
+
 class MaxPool2D(Function):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -105,6 +108,7 @@ class AvgPool2D(Function):
         pass
     def local_grad(self):
         pass
+
 
 class Conv2D(Layer):
     def __init__(self, *args, **kwargs):

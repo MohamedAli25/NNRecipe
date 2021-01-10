@@ -14,18 +14,18 @@ class Function(ABC):
     """
     def __init__(self):
         """ Initializing Cache variables to store the function output and local_grad"""
-        self._cache = None                  # cache the function output
-        self._grad = {}                     # cache function local grad
+        self._cache = None                   # cache the function output
+        self.__grad = {}                     # cache function local grad
 
     def __call__(self, x, *args, **kwargs):
-        """Perform the function forward path f(x), calculate the function gradient with respect to x"""
-        self._cache = self._forward(x, *args, **kwargs)                 # forward path
+        """Perform the function forward pass f(x), calculate the function gradient with respect to x"""
+        self._cache = self._forward(x, *args, **kwargs)                 # forward pass
         self.__grad = self._calc_local_grad(x, *args, **kwargs)         # Gradient Calculation, caching
         return self._cache
 
     @abstractmethod
     def _forward(self, x, *args, **kwargs):
-        """ This function resembles function forward path (f(x)), must be implemented """
+        """ This function resembles function forward pass (f(x)), must be implemented """
         pass
 
     @abstractmethod
