@@ -14,7 +14,7 @@ class Function(ABC):
     """
     def __init__(self):
         """ Initializing Cache variables to store the function output and local_grad"""
-        self._cache = None                   # cache the function output
+        self._cache = []                     # cache the function output
         self.__grad = {}                     # cache function local grad
 
     def __call__(self, x, *args, **kwargs):
