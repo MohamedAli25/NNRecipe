@@ -1,4 +1,4 @@
-from function import Function
+from src.NN.function import Function
 from _activations import *
 import numpy as np
 
