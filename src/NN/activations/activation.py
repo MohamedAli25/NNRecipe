@@ -1,5 +1,5 @@
-from function import Function
-from _activations import *
+from src.NN.function import Function
+from ._activations import *
 import numpy as np
 
 class Sigmoid(Function):
@@ -34,7 +34,7 @@ class Sigmoid(Function):
         :return: sigmoid gradient at input x
         :rtype: np.ndarray
         """
-        return {'dY': sigmoid_drv(x)}
+        return sigmoid_drv(x)
 
 
 class Softmax(Function):
@@ -94,7 +94,7 @@ class ReLU(Function):
         :return: relu gradient at input x
         :rtype: np.ndarray
         """
-        return {'dY': relu_drv(x)}
+        return relu_drv(x)
 
 class LeakyReLU(Function):
     """
@@ -137,4 +137,4 @@ class LeakyReLU(Function):
         :return: leaky relu gradient at input x
         :rtype: np.ndarray
         """
-        return {'dY': leaky_relu_drv(x, self._lr)}
+        return leaky_relu_drv(x, self._lr)

@@ -83,5 +83,24 @@
 
 import numpy as np    
 from src.NN.layers.linear import Linear
-l1 = Linear(3, 2, 2)
-print(l1.weights)
+from src.NN.activations.activation import Sigmoid
+from src.NN.losses.MeanSquared import MeanSquaredLoss
+
+x = np.array([[1, 0.1]])
+y = np.array([[0.6], [0.01]])
+l1 = Linear(in_dim=2, out_dim=2 , acivation=Sigmoid())
+l1.weights = np.eye(2)
+
+l2 = Linear(in_dim=2, out_dim=2 , acivation=Sigmoid())
+l2.weights = np.eye(2)
+
+"""Expected inpput is Row matrix and Output is column matrix"""
+out = l2(l1(x).T)
+
+msl = MeanSquaredLoss()
+print("loss:", msl(y, out))
+print("dL/dy:", msl.local_grad)
+
+print("weights:\n", l2.weights)
+for key, val in l2.local_grad.items():
+    print(key, val)
