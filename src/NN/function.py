@@ -30,7 +30,7 @@ class Function(ABC):
 
     @abstractmethod
     def _calc_local_grad(self, x, *args, **kwargs):
-        """ This function calculated the gradient (∇f = ∂f/∂x) of the function with respect to input x"""
+        """ This function calculate the gradient (∇f = ∂f/∂input) of the function with respect to input"""
         pass
 
     @property
