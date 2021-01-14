@@ -29,12 +29,10 @@ Network:
 	setLossFunction
 	train
 	save
-	compute
 	open
 	loadParams
 	flush
-	__initParams
-	
+
 Layer:
 	initParams
 	loadParams
