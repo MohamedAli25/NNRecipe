@@ -1,4 +1,4 @@
-from src.NN.layers.function import Function
+from src.NN.function import Function
 import numpy as np
 
 

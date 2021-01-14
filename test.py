@@ -84,7 +84,7 @@
 import numpy as np    
 from src.NN.layers.linear import Linear
 from src.NN.activations.activation import Sigmoid
-from src.NN.losses._losses import MeanSquaredLoss
+from src.NN.losses.MeanSquared import MeanSquaredLoss
 
 x = np.array([[1, 0.1]])
 y = np.array([[0.6], [0.01]])

@@ -1,13 +1,5 @@
-<<<<<<< Updated upstream
-from src.NN.function import Function
-from _activations import *
-||||||| constructed merge base
-from function import Function
-from _activations import *
-=======
 from src.NN.function import Function
 from ._activations import *
->>>>>>> Stashed changes
 import numpy as np
 
 class Sigmoid(Function):
