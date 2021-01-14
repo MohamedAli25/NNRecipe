@@ -10,6 +10,7 @@ class GCD(Optimizer):
             raise Optimizer.LearningRateTypeError(type(learning_rate))
         self.__learning_rate = learning_rate
 
-    def optimize(self, layer, global_grade: np.ndarray) -> None:
-        layer.weights = layer.weights - self.__learning_rate * global_grade
+    def optimize(self, layer, delta: np.ndarray) -> None:
+        layer.weights = layer.weights - self.__learning_rate * delta * layer.local_grad["dW"]
+        layer.bias = layer.bias - self.__learning_rate * delta * layer.local_grad["dB"]
 
