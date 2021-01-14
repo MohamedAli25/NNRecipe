@@ -2,7 +2,7 @@ from src.NN.function import Function
 from _losses import *
 import numpy as np
 
-
+#TODO this file to be depricated
 class CrossEntropyLoss(Function):
     def __init__(self):
         super(CrossEntropyLoss, self).__init__()

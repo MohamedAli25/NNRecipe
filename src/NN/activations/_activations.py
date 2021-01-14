@@ -1,5 +1,5 @@
 """
-Helper functions for activation functions
+Helper functions for activation functions to be depricated
 """
 import numpy as np
 

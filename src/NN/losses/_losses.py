@@ -1,6 +1,8 @@
 """
 Helper functions for loss functions
+
 """
+#TODO this file to be depricated
 import numpy as np
 
 def hinge_loss(Y, Y_Hat):

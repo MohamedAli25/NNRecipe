@@ -4,13 +4,15 @@ import numpy as np
 from abc import ABC, abstractmethod
 from src.NN.function import Function
 
-
+#TODO add default value to activatoin type
 class Layer(Function):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, in_dim, out_dim, *args, **kwargs):
         super(Layer, self).__init__()
-        self._weights = {}
-        self._weights_update = {}
-        
+        self._weights: np.ndarray = None
+        self._bias: np.ndarray = None
+        self.in_dim = in_dim
+        self.out_dim = out_dim
+
     @abstractmethod
     def _init_weights(self, *args, **kwargs):
         pass
