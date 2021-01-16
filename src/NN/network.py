@@ -67,3 +67,6 @@ class Network:
 
     def load_parameter(self):
         pass
+
+    def evaluate(self):
+        pass

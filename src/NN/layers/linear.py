@@ -55,7 +55,7 @@ class Linear(Layer):
         factor = np.tanh(1/self._in_dim) # factor that will be used to normalize params
         self._weights = np.random.rand(self._out_dim, self._in_dim) * factor # init weights
         # TODO make initializing bias and weights with a pre defined values a feature
-        self._bias = np.random.rand(self._out_dim, self.__batch_size) * factor
+        self._bias = np.random.rand(self._out_dim, 1) * factor
         # self._bias = np.ones((self._out_dim, self.__batch_size)) # init bias
 
     def _forward(self, x):
@@ -65,23 +65,25 @@ class Linear(Layer):
         :type x: np.ndarray
         :rtype: np.ndarray
         """
-        return self.__activation((np.dot(self._weights, x.T) + self._bias))
+        # print("weights", self._weights.shape, "X", x.T.shape, "bias", self._bias.shape)
+        return self.__activation(np.dot(self._weights, x.T) + self._bias).T
 
     def _calc_local_grad(self, x):
         """
         Local gradient calculations
 
         Gradient Calculated are:
-            1. dW: ∂Y/∂Z * ∂Z/∂W = activation gradient * X
-            2. dX: ∂Y/∂Z * ∂Z/∂X = activation gradient * W
-            3. dB: ∂Y/∂Z * ∂Z/∂B = activation gradient * 1
+            1. dW: ∂Z/∂W = X
+            2. dX: ∂Z/∂X = W
+            3. dZ: ∂Y/∂Z = activation gradient
 
+        :note: No need to return ∂Z/∂B as it's always 1
         :param x: input to the layer (output from the previous layer)
         :type x: np.ndarray
         :rtype: dict[str, np.ndarray]
         """
         return {
-            'dW': np.dot(self.__activation.local_grad, x),
-            'dX': np.multiply(self.__activation.local_grad, self.weights),
-            'dB': self.__activation.local_grad
+            'dW': x,
+            'dX': np.copy(self.weights),
+            'dZ': self.__activation.local_grad
         }

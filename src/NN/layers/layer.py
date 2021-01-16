@@ -44,8 +44,8 @@ class Layer(Function):          # TODO add default value to activation type
         if "weights" in kwargs:
             weights = kwargs["weights"]
             if type(weights) is not np.ndarray:
-                raise TypeError("Required type is numpu.ndarray but the given type is {}".format(str(type(weights))))
-            if self._weights.shape != weights.shape:
+                raise TypeError("Required type is numpy.ndarray but the given type is {}".format(str(type(weights))))
+            if self.weights.shape != weights.shape:
                 raise ShapeError(required_shape=str(self.weights.shape), given_shape=str(weights.shape))
             else:
                 self.weights = weights
@@ -53,7 +53,7 @@ class Layer(Function):          # TODO add default value to activation type
         if "bias" in kwargs:
             bias = kwargs["bias"]
             if type(bias) is not np.ndarray:
-                raise TypeError("Required type is numpu.ndarray but the given type is {}".format(str(type(bias))))
+                raise TypeError("Required type is numpy.ndarray but the given type is {}".format(str(type(bias))))
             if self._bias.shape != bias.shape:
                 raise ShapeError(required_shape=str(self._bias.shape), given_shape=str(bias.shape))
             else:
