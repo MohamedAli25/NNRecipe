@@ -5,13 +5,7 @@ import numpy as np
 #TODO add normalization type
 # regularization
 
-def CrossEntropyLoss(Y, Y_Hat):
-    #not finished sum
-    #log base e
-    if Y.any() == 1:
-        return -np.log(np.abs(Y_Hat))
-    else:
-        return -np.log(1 - Y_Hat)
+
 
 
 class CrossEntropyLoss(Function):
@@ -28,7 +22,7 @@ class CrossEntropyLoss(Function):
           :rtype:
         """
         N = Y_Hat.shape()
-        return cross_entropy_loss(Y, Y_Hat)
+        return -np.sum(Y * np.log(Y_Hat + 1e-9)+(1-Y)*(np.log(1-Y_Hat)))
 
     def _calc_local_grad(self, Y, x):
         """
@@ -39,4 +33,7 @@ class CrossEntropyLoss(Function):
         :return:
         :rtype:
         """
-        return (cross_entropy_loss_drv(Y, x) / Y.shape[0]).item(0)
+        X = np.copy(x)
+        grad = np.exp(X) / np.sum(np.exp(X))
+        grad[range(Y.shape[0]), Y] -= 1
+        return (grad/ Y.shape[0]).item(0)
