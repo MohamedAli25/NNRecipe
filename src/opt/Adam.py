@@ -4,7 +4,7 @@ import numpy as np
 
 class  ADAM(GD):
     def __init__(self, learning_rate,beta1=.5,beta2=0.95):
-        super(SGDMomentum, self).__init__(learning_rate)
+        super(ADAM, self).__init__(learning_rate)
         pass
          # self.__learning_rate = learning_rate
        	 # self.__beta2 = beta2

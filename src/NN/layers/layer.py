@@ -1,4 +1,7 @@
 from __future__ import annotations
+
+from builtins import property
+
 import numpy as np
 from abc import abstractmethod
 from src.NN.function import Function
@@ -44,8 +47,8 @@ class Layer(Function):          # TODO add default value to activation type
         if "weights" in kwargs:
             weights = kwargs["weights"]
             if type(weights) is not np.ndarray:
-                raise TypeError("Required type is numpu.ndarray but the given type is {}".format(str(type(weights))))
-            if self._weights.shape != weights.shape:
+                raise TypeError("Required type is numpy.ndarray but the given type is {}".format(str(type(weights))))
+            if self.weights.shape != weights.shape:
                 raise ShapeError(required_shape=str(self.weights.shape), given_shape=str(weights.shape))
             else:
                 self.weights = weights
@@ -53,7 +56,7 @@ class Layer(Function):          # TODO add default value to activation type
         if "bias" in kwargs:
             bias = kwargs["bias"]
             if type(bias) is not np.ndarray:
-                raise TypeError("Required type is numpu.ndarray but the given type is {}".format(str(type(bias))))
+                raise TypeError("Required type is numpy.ndarray but the given type is {}".format(str(type(bias))))
             if self._bias.shape != bias.shape:
                 raise ShapeError(required_shape=str(self._bias.shape), given_shape=str(bias.shape))
             else:
@@ -69,6 +72,7 @@ class Layer(Function):          # TODO add default value to activation type
     def weights(self, value):
         """ Layer's weights setter"""
         # TODO add type checking for weights setter
+        assert self._weights.shape == value.shape
         self._weights = value
 
     @property
@@ -80,4 +84,13 @@ class Layer(Function):          # TODO add default value to activation type
     def bias(self, value):
         """ Layer's weights setter"""
         # TODO add type checking for bias setter
+        assert self._bias.shape == value.shape
         self._bias = value
+
+    @property
+    def size(self):
+        return self._out_dim
+
+    @property
+    def input_size(self):
+        return self._in_dim

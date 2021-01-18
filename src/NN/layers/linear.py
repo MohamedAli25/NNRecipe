@@ -18,7 +18,7 @@ class Linear(Layer):
         2. dX: ∂Y/∂Z * ∂Z/∂X = activation gradient * W
         3. dB: ∂Y/∂Z * ∂Z/∂B = activation gradient * 1
     """
-    def __init__(self, in_dim, out_dim, activation, batch_size=1, **kwargs):
+    def __init__(self, in_dim, out_dim, activation, **kwargs):
         """
         Initializes the layer by calling base class constructor to create weights and bias and initialize them
 
@@ -28,8 +28,6 @@ class Linear(Layer):
         :type out_dim: int
         :param activation: activation function that will be used
         :type activation: Function
-        :param batch_size: batch size
-        :type batch_size: int
         :keyword weights: Initial value for layer weights
         :keyword bias:  Initial value for layer bias
 
@@ -38,7 +36,6 @@ class Linear(Layer):
 
         """
         self.__activation = activation
-        self.__batch_size = batch_size
         super(Linear, self).__init__(in_dim, out_dim, **kwargs)
 
     
@@ -66,23 +63,24 @@ class Linear(Layer):
         :type x: np.ndarray
         :rtype: np.ndarray
         """
-        return self.__activation((np.dot(self._weights, x.T) + self._bias)).T
+        return self.__activation(np.dot(self._weights, x.T) + self._bias).T
 
     def _calc_local_grad(self, x):
         """
         Local gradient calculations
 
         Gradient Calculated are:
-            1. dW: ∂Y/∂Z * ∂Z/∂W = activation gradient * X
-            2. dX: ∂Y/∂Z * ∂Z/∂X = activation gradient * W
-            3. dB: ∂Y/∂Z * ∂Z/∂B = activation gradient * 1
+            1. dW: ∂Z/∂W = X
+            2. dX: ∂Z/∂X = W
+            3. dZ: ∂Y/∂Z = activation gradient
 
+        :note: No need to return ∂Z/∂B as it's always 1
         :param x: input to the layer (output from the previous layer)
         :type x: np.ndarray
         :rtype: dict[str, np.ndarray]
         """
         return {
-            'dW': np.dot(self.__activation.local_grad, x),
-            'dX': np.multiply(self.__activation.local_grad, np.copy(self.weights)),
-            'dB': self.__activation.local_grad
+            'dW': x,
+            'dX': np.copy(self.weights),
+            'dZ': self.__activation.local_grad
         }
