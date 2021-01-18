@@ -26,25 +26,38 @@ class MaxPool2D(Function):
     def __call__(self, x, *args, **kwargs):
         return self._forward(x)
 
-    def _forward(self, x, *args, **kwargs):
-        # numOfBatches, numOfChannels, height, width = x.shape
+    def generate_initial_input_and_output(self, x, kernelSize, strides, padding: PaddingType):
         height, width = x.shape
-        # Calculate the size of the output
-        # ouputSize = (0, 0)
-        # padding = (0, 0)
-        # newInput = None
-        if self.padding == PaddingType.VALID:
-            outputHeight = (height - self.kernelSize[0]) // self.strides[0] + 1
-            outputWidth = (width - self.kernelSize[1]) // self.strides[1] + 1
+        if padding == PaddingType.VALID:
+            outputHeight = (height - kernelSize[0]) // strides[0] + 1
+            outputWidth = (width - kernelSize[1]) // strides[1] + 1
             outputSize = (outputHeight, outputWidth)
             newInput = x
         else:
             outputSize = (height, width)
-            paddingHeight = ((self.strides[0] - 1) * height - self.strides[0] + self.kernelSize[0]) // 2
-            paddingWidth = ((self.strides[1] - 1) * width - self.strides[1] + self.kernelSize[1]) // 2
+            paddingHeight = ((strides[0] - 1) * height - strides[0] + kernelSize[0]) // 2
+            paddingWidth = ((strides[1] - 1) * width - strides[1] + kernelSize[1]) // 2
             newInput = np.zeros(outputSize)
             newInput[paddingHeight:paddingWidth + height, paddingWidth:paddingWidth + width] = x
         output = np.zeros(outputSize)
+        return newInput, output
+
+    def _forward(self, x, *args, **kwargs):
+        # height, width = x.shape
+        # if self.padding == PaddingType.VALID:
+        #     outputHeight = (height - self.kernelSize[0]) // self.strides[0] + 1
+        #     outputWidth = (width - self.kernelSize[1]) // self.strides[1] + 1
+        #     outputSize = (outputHeight, outputWidth)
+        #     newInput = x
+        # else:
+        #     outputSize = (height, width)
+        #     paddingHeight = ((self.strides[0] - 1) * height - self.strides[0] + self.kernelSize[0]) // 2
+        #     paddingWidth = ((self.strides[1] - 1) * width - self.strides[1] + self.kernelSize[1]) // 2
+        #     newInput = np.zeros(outputSize)
+        #     newInput[paddingHeight:paddingWidth + height, paddingWidth:paddingWidth + width] = x
+        # output = np.zeros(outputSize)
+        newInput, output = self.generate_initial_input_and_output(x, self.kernelSize, self.strides, self.padding)
+        outputSize = output.shape
         outputHeight = outputSize[0]
         outputWidth = outputSize[1]
         for i in range(outputHeight):
@@ -76,9 +89,6 @@ class AvgPool2D(Function):
         # numOfBatches, numOfChannels, height, width = x.shape
         height, width = x.shape
         # Calculate the size of the output
-        # ouputSize = (0, 0)
-        # padding = (0, 0)
-        # newInput = None
         if self.padding == PaddingType.VALID:
             outputHeight = (height - self.kernelSize[0]) // self.strides[0] + 1
             outputWidth = (width - self.kernelSize[1]) // self.strides[1] + 1
