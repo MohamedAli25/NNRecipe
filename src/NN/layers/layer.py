@@ -1,4 +1,7 @@
 from __future__ import annotations
+
+from builtins import property
+
 import numpy as np
 from abc import abstractmethod
 from src.NN.function import Function
@@ -69,6 +72,7 @@ class Layer(Function):          # TODO add default value to activation type
     def weights(self, value):
         """ Layer's weights setter"""
         # TODO add type checking for weights setter
+        assert self._weights.shape == value.shape
         self._weights = value
 
     @property
@@ -80,4 +84,13 @@ class Layer(Function):          # TODO add default value to activation type
     def bias(self, value):
         """ Layer's weights setter"""
         # TODO add type checking for bias setter
+        assert self._bias.shape == value.shape
         self._bias = value
+
+    @property
+    def size(self):
+        return self._out_dim
+
+    @property
+    def input_size(self):
+        return self._in_dim
