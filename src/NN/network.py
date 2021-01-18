@@ -138,7 +138,7 @@ class Network:
         :rtype: Tuple[int, int]
         """
         # type checking for input configurations
-        check_integer(epsilon, "epsilon size value must be a positive real integer greater than zero")
+        check_float(epsilon, "epsilon size value must be a positive real float greater than zero")
         check_integer(max_itr, "max_itr size value must be a positive real integer greater than zero")
         if batch_size is not None:
             check_integer(batch_size, "batch size value must be a positive real integer greater than zero")
