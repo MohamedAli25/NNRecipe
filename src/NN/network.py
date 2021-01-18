@@ -152,6 +152,7 @@ class Network:
                 for example_index in range(len(X)):
                     x_batch = X[example_index].reshape(1, X[example_index].shape[0])
                     out, loss = self.__probagat(x_batch , Y[example_index])
+                print(loss)
                 if loss < epsilon: break
                 iteration += 1
                 if iteration > max_itr: break
@@ -159,6 +160,7 @@ class Network:
             # batch size equal to number of input examples
             while True:
                 out, loss = self.__probagat(X, Y, iteration=iteration)
+                print(loss)
                 if loss < epsilon: break
                 iteration += 1
                 if iteration >= max_itr: break
@@ -178,6 +180,7 @@ class Network:
         """
         out = self.evaluate(X)  # value of the forward path
         loss = self.__loss(Y, out)  # get loss value
+        print("loss is", loss)
         delta = self.__loss.local_grad  # get ∂loss/∂y
         # backpropagation path
         for layer in reversed(self.__layers):
