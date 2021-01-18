@@ -26,19 +26,19 @@ class MaxPool2D(Function):
     def __call__(self, x, *args, **kwargs):
         return self._forward(x)
 
-    def generate_initial_input_and_output(self, x, kernelSize, strides, padding: PaddingType):
+    def _generate_initial_input_and_output(self, x, kernelSize, strides, padding: PaddingType):
         height, width = x.shape
         if padding == PaddingType.VALID:
             outputHeight = (height - kernelSize[0]) // strides[0] + 1
             outputWidth = (width - kernelSize[1]) // strides[1] + 1
             outputSize = (outputHeight, outputWidth)
             newInput = x
-        else:
+        else:   # padding is SAME
             outputSize = (height, width)
             paddingHeight = ((strides[0] - 1) * height - strides[0] + kernelSize[0]) // 2
             paddingWidth = ((strides[1] - 1) * width - strides[1] + kernelSize[1]) // 2
-            newInput = np.zeros(outputSize)
-            newInput[paddingHeight:paddingWidth + height, paddingWidth:paddingWidth + width] = x
+            newInput = np.zeros((height + 2*paddingHeight, width + 2*paddingWidth))
+            newInput[paddingHeight:paddingHeight + height, paddingWidth:paddingWidth + width] = x
         output = np.zeros(outputSize)
         return newInput, output
 
@@ -56,7 +56,7 @@ class MaxPool2D(Function):
         #     newInput = np.zeros(outputSize)
         #     newInput[paddingHeight:paddingWidth + height, paddingWidth:paddingWidth + width] = x
         # output = np.zeros(outputSize)
-        newInput, output = self.generate_initial_input_and_output(x, self.kernelSize, self.strides, self.padding)
+        newInput, output = self._generate_initial_input_and_output(x, self.kernelSize, self.strides, self.padding)
         outputSize = output.shape
         outputHeight = outputSize[0]
         outputWidth = outputSize[1]
@@ -67,7 +67,9 @@ class MaxPool2D(Function):
                 widthStart = j * self.strides[1]
                 widthEnd = widthStart + self.strides[1]
                 output[i][j] = np.max(newInput[heightStart:heightEnd, widthStart:widthEnd])
-
+        return output
+    def _calc_local_grad(self):
+        pass
 
 class AvgPool2D(Function):
     def __init__(self, kernelSize, strides, padding=PaddingType.SAME, *args, **kwargs):
@@ -85,7 +87,7 @@ class AvgPool2D(Function):
     def __call__(self, x, *args, **kwargs):
         return self._forward(x)
 
-    def forward(self, x):
+    def _forward(self, x):
         # numOfBatches, numOfChannels, height, width = x.shape
         height, width = x.shape
         # Calculate the size of the output
@@ -98,7 +100,7 @@ class AvgPool2D(Function):
             outputSize = (height, width)
             paddingHeight = ((self.strides[0] - 1) * height - self.strides[0] + self.kernelSize[0]) // 2
             paddingWidth = ((self.strides[1] - 1) * width - self.strides[1] + self.kernelSize[1]) // 2
-            newInput = np.zeros(outputSize)
+            newInput = np.zeros((height + 2*paddingHeight, width + 2*paddingWidth))
             newInput[paddingHeight:paddingWidth + height, paddingWidth:paddingWidth + width] = x
         output = np.zeros(outputSize)
         outputHeight = outputSize[0]
@@ -110,3 +112,6 @@ class AvgPool2D(Function):
                 widthStart = j * self.strides[1]
                 widthEnd = widthStart + self.strides[1]
                 output[i][j] = np.average(newInput[heightStart:heightEnd, widthStart:widthEnd])
+        return output
+    def _calc_local_grad(self):
+        pass
