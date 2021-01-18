@@ -4,37 +4,53 @@ from src.NN.activations.activation import Identity, Sigmoid
 from src.NN.losses.MeanSquared import MeanSquaredLoss
 from src.opt.GD import GD
 
+from src.NN.network import Network
+
 x = np.array([
     [1, 1],
-    [1, -1],
-    [-1, 1],
-    [-1, -1]
+    [2, 3],
+    [4, 7],
+    [-1, -1],
+    [-7, -0.2],
+    [-0.1, -3]
 ])
+
 y = np.array([
-    [-1],
     [1],
     [1],
-    [-1]
+    [1],
+    [-10],
+    [-10],
+    [-10],
 ])
-opt = GD(learning_rate=0.1)
-msl = MeanSquaredLoss()
-l1 = Linear(in_dim=2, out_dim=2, activation=Identity())
-l2 = Linear(in_dim=2, out_dim=1, activation=Identity())
 
-for a in range(50):
-    out = l2(l1(x))
-    print("loss {}:".format(str(a)), msl(y, out))
-    msl(y, out)
-    delta = np.multiply( msl.local_grad.T, l2.local_grad["dZ"])
-    opt.optimize(l2, delta)
-    delta = np.dot(delta.T, l2.local_grad["dX"])
+l1 = Linear(in_dim=2, out_dim=1, activation=Sigmoid())
+l11 = Linear(in_dim=2, out_dim=1, activation=Sigmoid(), weights=np.copy(l1.weights), bias=np.copy(l1.bias))
+net = Network(
+    l11,
+    optimizer=GD(learning_rate=0.1),
+    train_mode=Network.TrainingMode.ONLINE_TRAINING
+)
+loss, it_no = net.train(x, y, epsilon=0.1)
+print(net.evaluate([-7, -0.2]))
+# print("####################################################################################################")
+# opt = GD(learning_rate=0.1)
+# msl = MeanSquaredLoss()
+# for a in range(5):
+#     out = l1(x)
+#     loss = msl(y, out)
+#     print("{}".format(loss))
+#     delta = msl.local_grad
+#     # print("delta", delta)
+#     delta = np.multiply(delta.T, l1.local_grad["dZ"])  # delta * ∂y/∂z
+#     opt.optimize(l1, delta)
+#     delta = np.dot(delta.T, l1.local_grad["dX"])
+#
+#     # delta = np.multiply(delta.T, l1.local_grad["dZ"])  # delta * ∂y/∂z
+#     # opt.optimize(l1, delta)
 
-    delta = np.multiply(delta.T, l1.local_grad["dZ"])
-    opt.optimize(l1, delta)
-
-print(l1.weights)
-print(l1.bias)
-print(l2.weights)
-print(l2.bias)
+# print(l1.weights)
+# print(l1.bias)
+# print(l2.weights)
+# print(l2.bias)
 # print(l2(l1(np.array([[5,5]]))))
-
