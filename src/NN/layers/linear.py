@@ -18,7 +18,7 @@ class Linear(Layer):
         2. dX: ∂Y/∂Z * ∂Z/∂X = activation gradient * W
         3. dB: ∂Y/∂Z * ∂Z/∂B = activation gradient * 1
     """
-    def __init__(self, in_dim, out_dim, activation, batch_size=1, **kwargs):
+    def __init__(self, in_dim, out_dim, activation, **kwargs):
         """
         Initializes the layer by calling base class constructor to create weights and bias and initialize them
 
@@ -28,8 +28,6 @@ class Linear(Layer):
         :type out_dim: int
         :param activation: activation function that will be used
         :type activation: Function
-        :param batch_size: batch size
-        :type batch_size: int
         :keyword weights: Initial value for layer weights
         :keyword bias:  Initial value for layer bias
 
@@ -38,7 +36,6 @@ class Linear(Layer):
 
         """
         self.__activation = activation
-        self.__batch_size = batch_size
         super(Linear, self).__init__(in_dim, out_dim, **kwargs)
 
     
@@ -54,9 +51,8 @@ class Linear(Layer):
         """
         factor = np.tanh(1/self._in_dim) # factor that will be used to normalize params
         self._weights = np.random.rand(self._out_dim, self._in_dim) * factor # init weights
-        # TODO make initializing bias and weights with a pre defined values a feature
         self._bias = np.random.rand(self._out_dim, 1) * factor
-        # self._bias = np.ones((self._out_dim, self.__batch_size)) # init bias
+        # self._bias = np.ones((self._out_dim, 1)) # init bias
 
     def _forward(self, x):
         """
