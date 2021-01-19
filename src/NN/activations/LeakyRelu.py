@@ -11,11 +11,11 @@ class LeakyReLU(Function):
     >>> print(f.local_grad)               # get local_grad of the relu at the input
     """
 
-    def __init__(self, lr=0.01):
+    def __init__(self, learning_rate=0.01):
         super(LeakyReLU, self).__init__()
-        self._lr = lr
+        self._learning_rate = learning_rate
 
-    def _forward(self,x,lr):
+    def _forward(self,x):
         """
         - Forward pass of the leaky relu function
         - leaky_relu(x) = {
@@ -28,10 +28,10 @@ class LeakyReLU(Function):
         :return: leakyrelu value at input x
         :rtype: np.ndarray
         """
+        X = np.copy(x)
+        return np.where(X > 0, X, X * self._learning_rate)
 
-        return np.where(x > 0, x, x * lr)
-
-    def _calc_local_grad(self, x,lr):
+    def _calc_local_grad(self, x):
         """
         - Backward pass of the leaky relu function
         - ∇ leaky_relu(x) = {
@@ -45,5 +45,5 @@ class LeakyReLU(Function):
         :rtype: np.ndarray
         """
         dx = np.ones_like(x)
-        dx[x < 0] = lr
+        dx[x < 0] = self._learning_rate
         return dx

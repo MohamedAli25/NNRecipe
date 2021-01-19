@@ -29,9 +29,10 @@ class HardTanh(Function):
         :return: HardTanh value at input x
         :rtype: np.ndarray
         """
-        x[x > 1] = 1
-        x[x < -1] = -1
-        return x  # or np.maximum(-1, np.minimum(1, x))
+        X = np.copy(x)
+        X[x > 1] = 1
+        X[x < -1] = -1
+        return X  # or np.maximum(-1, np.minimum(1, x))
 
     def _calc_local_grad(self, x):
         """
@@ -47,8 +48,8 @@ class HardTanh(Function):
         :rtype: np.ndarray
         """
         X = np.copy(x)
-        X[X < -1 and X > 1] = 0
-        X[X >= -1 and X < 1] = 1
+        X[x < -1 and x > 1] = 0
+        X[x >= -1 and x < 1] = 1
         return X
 
 

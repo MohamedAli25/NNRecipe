@@ -24,6 +24,7 @@ class Sigmoid(Function):
         :return: sigmoid value at input x
         :rtype: np.ndarray
         """
+
         return 1/(1 + np.exp(-x))
 
     def _calc_local_grad(self, x):

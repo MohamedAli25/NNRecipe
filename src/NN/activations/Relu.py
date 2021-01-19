@@ -1,12 +1,6 @@
 from src.NN.function import Function
 import numpy as np
 
-
-def relu(x):
-    return
-
-def relu_drv(x):
-    return
 class ReLU(Function):
     """
     Class represents the relu activation function
@@ -31,7 +25,8 @@ class ReLU(Function):
         :rtype: np.ndarray
         """
         # x * (x > 0).astype(x.dtype)
-        return  np.maximum(0, x)
+        X = np.copy(x)
+        return  np.maximum(0, X)
 
     def _calc_local_grad(self, x):
         """
@@ -43,4 +38,5 @@ class ReLU(Function):
         :return: relu gradient at input x
         :rtype: np.ndarray
         """
-        return (x > 0).astype(x.dtype)
+        X = np.copy(x)
+        return (X > 0).astype(X.dtype)

@@ -21,8 +21,8 @@ class CrossEntropyLoss(Function):
           :return:
           :rtype:
         """
-        N = Y_Hat.shape()
-        return -np.sum(Y * np.log(Y_Hat + 1e-9)+(1-Y)*(np.log(1-Y_Hat)))
+        N = Y_Hat.shape[0]
+        return - (1/N) * np.sum(Y * np.log(Y_Hat + 1e-9)+(1-Y)*(np.log(1-Y_Hat)))
 
     def _calc_local_grad(self, Y, x):
         """
@@ -33,7 +33,6 @@ class CrossEntropyLoss(Function):
         :return:
         :rtype:
         """
-        X = np.copy(x)
-        grad = np.exp(X) / np.sum(np.exp(X))
+        grad = np.exp(x) / np.sum(np.exp(x), axis=1, keepdims=True)
         grad[range(Y.shape[0]), Y] -= 1
-        return (grad/ Y.shape[0]).item(0)
+        return grad / Y.shape[0]
