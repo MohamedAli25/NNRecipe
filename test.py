@@ -1,39 +1,42 @@
 import numpy as np
 from src.NN.layers.linear import Linear
+from src.NN.layers.pooling import*
 from src.NN.activations.Sigmoid import Sigmoid
 from src.NN.losses.MeanSquared import MeanSquaredLoss
 from src.opt.GD import GD
 
 from src.NN.network import Network
+from PIL import Image
 
-x = np.array([
-    [1, 1],
-    [2, 3],
-    [4, 7],
-    [-1, -1],
-    [-7, -0.2],
-    [-0.1, -3]
-])
+# x = np.array([
+#     [1, 1],
+#     [2, 3],
+#     [4, 7],
+#     [-1, -1],
+#     [-7, -0.2],
+#     [-0.1, -3]
+# ])
 
-y = np.array([
-    [1],
-    [1],
-    [1],
-    [-10],
-    [-10],
-    [-10],
-])
+# y = np.array([
+#     [1],
+#     [1],
+#     [1],
+#     [-10],
+#     [-10],
+#     [-10],
+# ])
 
-l1 = Linear(in_dim=2, out_dim=1, activation=Sigmoid())
-l11 = Linear(in_dim=2, out_dim=1, activation=Sigmoid(), weights=np.copy(l1.weights), bias=np.copy(l1.bias))
-net = Network(
-    layers=[l11],
-    optimizer=GD(learning_rate=0.1),
+# l1 = Linear(in_dim=2, out_dim=1, activation=Sigmoid())
+# l11 = Linear(in_dim=2, out_dim=1, activation=Sigmoid(), weights=np.copy(l1.weights), bias=np.copy(l1.bias))
+# net = Network(
+#     layers=[l11],
+#     optimizer=GD(learning_rate=0.1),
 
-)
-loss, it_no = net.train(x, y, epsilon=0.1)
-print(loss)
-print(net.evaluate([-7, -0.2]))
+# )
+# loss, it_no = net.train(x, y, epsilon=0.1)
+# print(loss)
+# print(net.evaluate([-7, -0.2]))
+
 # print("####################################################################################################")
 # opt = GD(learning_rate=0.1)
 # msl = MeanSquaredLoss()
@@ -41,7 +44,7 @@ print(net.evaluate([-7, -0.2]))
 #     out = l1(x)
 #     loss = msl(y, out)
 #     print("{}".format(loss))
-#     delta = msl.local_grad
+#     delta = msl.local_grad    # dL/dy (last layer)
 #     # print("delta", delta)
 #     delta = np.multiply(delta.T, l1.local_grad["dZ"])  # delta * ∂y/∂z
 #     opt.optimize(l1, delta)
@@ -55,3 +58,12 @@ print(net.evaluate([-7, -0.2]))
 # print(l2.weights)
 # print(l2.bias)
 # print(l2(l1(np.array([[5,5]]))))
+
+img = Image.open(r'E:\\Engineering_courses\\Senior\\NN\\Project\\andrew2.jpeg') #.convert('LA')
+p1 = MaxPool2D(kernelSize=3, strides=2, padding=PaddingType.SAME)
+# print(np.array(img).shape)
+p1_out = p1(np.array(img))
+# in_p = np.arange(1, 10).reshape((3,3,1))
+# print(in_p)
+# print(p1_out)
+Image.fromarray(np.uint8(p1_out)).show()

@@ -75,7 +75,7 @@ class Conv2D(Layer):
             outputSize = (height, width, numOfChannels)
             paddingHeight = ((strides[0] - 1) * height - strides[0] + kernelSize[0]) // 2
             paddingWidth = ((strides[1] - 1) * width - strides[1] + kernelSize[1]) // 2
-            newInput = np.zeros(outputSize)
+            newInput = np.zeros((height + paddingHeight, width + paddingWidth))
             newInput[paddingHeight:paddingWidth + height, paddingWidth:paddingWidth + width, :] = x
         output = np.zeros(outputSize)
         return newInput, output
