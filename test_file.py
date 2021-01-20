@@ -1,11 +1,11 @@
 import numpy as np
-from src.NN.layers.linear import Linear
-from src.NN.layers.pooling import*
-from src.NN.activations.Sigmoid import Sigmoid
-from src.NN.losses.MeanSquared import MeanSquaredLoss
-from src.opt.GD import GD
+from nn_recipe.NN.layers.linear import Linear
+from nn_recipe.NN.layers.pooling import*
+from nn_recipe.NN.activations.Sigmoid import Sigmoid
+from nn_recipe.NN.losses.MeanSquared import MeanSquaredLoss
+from nn_recipe.opt.GD import GD
 
-from src.NN.network import Network
+from nn_recipe.NN.network import Network
 from PIL import Image
 
 # x = np.array([
