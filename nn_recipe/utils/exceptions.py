@@ -27,3 +27,8 @@ def check_integer(value_to_check, error_msg):
 def check_float(value_to_check, error_msg):
     if type(value_to_check) is not float or value_to_check <= 0:
         raise TypeError(error_msg)
+
+
+__all__ = [
+    "ShapeError", "OptimizerTypeError", "LayerTypeError", "LossFunctionTypeError"
+]

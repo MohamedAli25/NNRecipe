@@ -1,7 +1,7 @@
 from __future__ import annotations
 import numpy as np
-from nn_recipe.NN.layers.layer import Layer
-from nn_recipe.NN.function import Function
+from nn_recipe.NN.Layers.layer import Layer
+from nn_recipe.NN.__function import Function
 
 
 class Linear(Layer):

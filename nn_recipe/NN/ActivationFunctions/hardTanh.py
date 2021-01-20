@@ -1,4 +1,4 @@
-from nn_recipe.NN.function import Function
+from nn_recipe.NN.__function import Function
 
 import numpy as np
 

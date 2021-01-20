@@ -279,6 +279,7 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-nn_recipe/DataLoader/cifarDataLoader.py
-nn_recipe/DataLoader/dataLoader.py
-nn_recipe/DataLoader/mnistDataLoader.py
+#nn_recipe/DataLoader/cifarDataLoader.py
+#nn_recipe/DataLoader/dataLoader.py
+#nn_recipe/DataLoader/mnistDataLoader.py
+test_file.py

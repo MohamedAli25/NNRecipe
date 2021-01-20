@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='nn_recipe',
@@ -8,6 +8,14 @@ setup(
     author='Mohamed Gamal - Mohamed Adel - Ahmed Kaled - Mahmoud Hassan - Mohamed Abduallah - Mariem Abdelrahman - Yasmin Alaa',
     author_email='mgtmprog@gmail.com',
     license='GNU GPLv3',
-    packages=['funniest'],
-    zip_safe=False
+    packages=find_packages(),
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License ::  GNU GPLv3 License",
+        "Operating System :: OS Independent",
+    ],
+    install_requires=[
+          'numpy', 'pillow', 'setuptools'
+    ],
+    python_requires='>=3.7',
 )

@@ -1,8 +1,8 @@
-from nn_recipe.NN.layers.layer import Layer
-from nn_recipe.opt.optimizer import Optimizer
-from nn_recipe.NN.function import Function
-from nn_recipe.opt.GD import GD
-from nn_recipe.NN.losses.MeanSquared import MeanSquaredLoss
+from nn_recipe.NN.Layers.layer import Layer
+from nn_recipe.Opt.optimizer import Optimizer
+from nn_recipe.NN.__function import Function
+from nn_recipe.Opt.gd import GD
+from nn_recipe.NN.LossFunctions.meanSquared import MeanSquaredLoss
 from nn_recipe.utils.exceptions import *
 import numpy as np
 from typing import List, Tuple
@@ -16,7 +16,7 @@ class Network:
     ---------
     >>> from nn_recipe.NN import *
     >>> net = Network(
-    ...     layers=[
+    ...     Layers=[
     ...         Linear(in_dim=4, out_dim=3, activation=Sigmoid()),
     ...         Linear(in_dim=3, out_dim=3, activation=Sigmoid()),
     ...         Linear(in_dim=3, out_dim=2, activation=Sigmoid())
@@ -30,7 +30,7 @@ class Network:
     :note: The class have the implementation for backprop so you can use the layer objects directly if u want to
                 reimplement the backprop
     :note: Default training mode is Patch training with patch size equal to the input examples
-    :ivar __layers: contains the layers in the network
+    :ivar __layers: contains the Layers in the network
     :type __layer: list[Layer]
     :ivar __opt: Optimization object that will be used in weights update
     :type __opt: Optimizer
@@ -42,7 +42,7 @@ class Network:
 
     def __init__(self, layers, optimizer=GD(), loss_function=MeanSquaredLoss(), batch_size=None):
         """
-        :param layers: List of layers that will be contained in the network
+        :param layers: List of Layers that will be contained in the network
         :type layers: List[Layer]
         :param optimizer: Optimizer object that will be used in the training process
         :type optimizer: Optimizer
@@ -68,7 +68,7 @@ class Network:
         """
         Add Layers to the network
 
-        :param layers: List of layers that will be contained in the network
+        :param layers: List of Layers that will be contained in the network
         :type layers: List[Layer]
         :raise ShapeError: When the layer have an input size not equal to the output size of the previous layer
         :raise LayerTypeError: when the layer object is not a child of Layer
@@ -80,7 +80,7 @@ class Network:
             # check for the object parent class
             if not issubclass(layer.__class__, Layer):
                 raise LayerTypeError()
-            # check layers dimensions
+            # check Layers dimensions
             if size is None:
                 size = layer.size
             else:
@@ -88,7 +88,7 @@ class Network:
                     raise ShapeError(required_shape=str(size), given_shape=layer.input_size)
                 else:
                     size = layer.size
-            # adding layers to layers list
+            # adding Layers to Layers list
             self.__layers.append(layer)
 
     def set_optimizer(self, optimizer:Optimizer):

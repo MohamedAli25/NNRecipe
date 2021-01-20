@@ -4,7 +4,7 @@ from builtins import property
 
 import numpy as np
 from abc import abstractmethod
-from nn_recipe.NN.function import Function
+from nn_recipe.NN.__function import Function
 from nn_recipe.utils.exceptions import ShapeError
 
 

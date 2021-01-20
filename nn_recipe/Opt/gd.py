@@ -1,4 +1,4 @@
-from nn_recipe.opt.optimizer import Optimizer
+from nn_recipe.Opt.optimizer import Optimizer
 import numpy as np
 
 
