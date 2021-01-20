@@ -1,9 +1,9 @@
-from src.NN.layers.layer import Layer
-from src.opt.optimizer import Optimizer
-from src.NN.function import Function
-from src.opt.GD import GD
-from src.NN.losses.MeanSquared import MeanSquaredLoss
-from src.utils.exceptions import *
+from nn_recipe.NN.layers.layer import Layer
+from nn_recipe.opt.optimizer import Optimizer
+from nn_recipe.NN.function import Function
+from nn_recipe.opt.GD import GD
+from nn_recipe.NN.losses.MeanSquared import MeanSquaredLoss
+from nn_recipe.utils.exceptions import *
 import numpy as np
 from typing import List, Tuple
 
@@ -14,7 +14,7 @@ class Network:
 
     Examples
     ---------
-    >>> from src.NN import *
+    >>> from nn_recipe.NN import *
     >>> net = Network(
     ...     layers=[
     ...         Linear(in_dim=4, out_dim=3, activation=Sigmoid()),

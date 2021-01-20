@@ -1,4 +1,4 @@
-from src.opt.gcd import GCD
+from nn_recipe.opt.gcd import GCD
 import numpy as np
 
 

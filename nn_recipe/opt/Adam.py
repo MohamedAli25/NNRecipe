@@ -1,4 +1,4 @@
-from src.opt.GD import GD
+from nn_recipe.opt.GD import GD
 import numpy as np
 
 

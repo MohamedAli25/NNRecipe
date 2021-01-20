@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
-from src.NN.function import Function
+from nn_recipe.NN.function import Function
 from enum import Enum, auto
 
 class PaddingType(Enum):

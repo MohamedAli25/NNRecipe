@@ -4,8 +4,8 @@ from builtins import property
 
 import numpy as np
 from abc import abstractmethod
-from src.NN.function import Function
-from src.utils.exceptions import ShapeError
+from nn_recipe.NN.function import Function
+from nn_recipe.utils.exceptions import ShapeError
 
 
 class Layer(Function):          # TODO add default value to activation type
