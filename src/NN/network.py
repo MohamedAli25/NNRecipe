@@ -14,11 +14,12 @@ class Network:
 
     Examples
     ---------
+    >>> from src.NN import *
     >>> net = Network(
     ...     layers=[
-    ...         Layer(in_dim=4, out_dim=3, activation=Sigmoid()),
-    ...         Layer(in_dim=3, out_dim=3, activation=Sigmoid()),
-    ...         Layer(in_dim=3, out_dim=2, activation=Sigmoid())
+    ...         Linear(in_dim=4, out_dim=3, activation=Sigmoid()),
+    ...         Linear(in_dim=3, out_dim=3, activation=Sigmoid()),
+    ...         Linear(in_dim=3, out_dim=2, activation=Sigmoid())
     ...     ],
     ...     optimizer=GD(learning_rate=0.5),
     ... )
@@ -39,7 +40,7 @@ class Network:
     :type __batch_size: ints
     """
 
-    def __init__(self, layers, optimizer=GD(), loss_function=MeanSquaredLoss(), batch_size=1):
+    def __init__(self, layers, optimizer=GD(), loss_function=MeanSquaredLoss(), batch_size=None):
         """
         :param layers: List of layers that will be contained in the network
         :type layers: List[Layer]
@@ -60,7 +61,7 @@ class Network:
         # Set default values
         self.set_optimizer(optimizer)
         self.set_loss_function(loss_function)
-        self.set_batch_size(batch_size)
+        if batch_size is not None: self.set_batch_size(batch_size)
         self.add_layers(layers)
 
     def add_layers(self, layers):
@@ -151,23 +152,22 @@ class Network:
             while True:
                 for example_index in range(len(X)):
                     x_batch = X[example_index].reshape(1, X[example_index].shape[0])
-                    out, loss = self.__probagat(x_batch , Y[example_index])
-                print(loss)
+                    print("patch", x_batch)
+                    out, loss = self.__propagate(x_batch, Y[example_index])
                 if loss < epsilon: break
                 iteration += 1
-                if iteration > max_itr: break
+                if iteration >= max_itr: break
         else:
             # batch size equal to number of input examples
             while True:
-                out, loss = self.__probagat(X, Y, iteration=iteration)
-                print(loss)
+                out, loss = self.__propagate(X, Y, iteration=iteration)
                 if loss < epsilon: break
                 iteration += 1
                 if iteration >= max_itr: break
 
         return loss, iteration
 
-    def __probagat(self, X, Y, **kwargs):
+    def __propagate(self, X, Y, **kwargs):
         """
         This function executes the forward path and the backward path for a one iteration
 
@@ -180,12 +180,11 @@ class Network:
         """
         out = self.evaluate(X)  # value of the forward path
         loss = self.__loss(Y, out)  # get loss value
-        print("loss is", loss)
         delta = self.__loss.local_grad  # get ∂loss/∂y
         # backpropagation path
         for layer in reversed(self.__layers):
             delta = np.multiply(delta.T, layer.local_grad["dZ"])  # delta * ∂y/∂z
-            self.__opt.optimize(layer, delta, **kwargs) # update weights and bias for a given layer
+            self.__opt.optimize(layer, delta) # update weights and bias for a given layer
             delta = np.dot(delta.T, layer.local_grad["dX"]) # update the accumulated gradient ∂loss/∂x
         return out, loss
 
