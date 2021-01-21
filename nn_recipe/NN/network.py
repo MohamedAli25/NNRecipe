@@ -4,6 +4,7 @@ from nn_recipe.NN.__function import Function
 from nn_recipe.Opt.gd import GD
 from nn_recipe.NN.LossFunctions.meanSquared import MeanSquaredLoss
 from nn_recipe.utils.exceptions import *
+from nn_recipe.utils.exceptions import check_integer, check_float
 import numpy as np
 from typing import List, Tuple
 
@@ -120,7 +121,7 @@ class Network:
         check_integer(batch_size, "batch size value must be a positive real integer greater than zero")
         self.__batch_size = batch_size
 
-    def train(self, X, Y, batch_size=None, epsilon=0.1, max_itr=100):
+    def train(self, X, Y, batch_size=None, epsilon=0.1, max_itr=100, notify_func=None):
         """
         Train the network using the configurations added to the network
 
@@ -135,6 +136,8 @@ class Network:
         :type epsilon: int
         :param max_itr: maximum number of iteration to be executed
         :type max_itr: int
+        :notify_func: callback function used to report loss after training an epoch
+        :type notify_func: Function[int]
         :return: loss value and number of iterations executed
         :rtype: Tuple[int, int]
         """
@@ -151,18 +154,24 @@ class Network:
             # batch size equal to self.__batch_size
             while True:
                 for example_index in range(len(X)):
-                    x_batch = X[example_index].reshape(1, X[example_index].shape[0])
-                    print("patch", x_batch)
+                    x_batch = X[example_index].reshape(batch_size, X[example_index].shape[0])       # TODO spliting array
+                    print(x_batch.shape)
                     out, loss = self.__propagate(x_batch, Y[example_index])
-                if loss < epsilon: break
+                    loss = np.sum(loss) / loss.shape[0]
+                    if notify_func is not  None: notify_func(loss)
+                # if loss < epsilon: break
+                if notify_func is not None: notify_func("*************************************************************")
                 iteration += 1
                 if iteration >= max_itr: break
         else:
             # batch size equal to number of input examples
             while True:
                 out, loss = self.__propagate(X, Y, iteration=iteration)
-                if loss < epsilon: break
+                loss = np.sum(loss) / loss.shape[0]
+                if notify_func is not None: notify_func(loss)
+                # if loss < epsilon: break
                 iteration += 1
+                if notify_func is not None: notify_func("*************************************************************")
                 if iteration >= max_itr: break
 
         return loss, iteration
