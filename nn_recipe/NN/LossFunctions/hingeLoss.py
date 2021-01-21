@@ -1,14 +1,12 @@
-from nn_recipe.NN.__function import Function
+from .__loss_function import LossFunction
 import numpy as np
 
 
-
-
-class HingeLoss(Function):
+class HingeLoss(LossFunction):
     def __init__(self):
         super(HingeLoss, self).__init__()
 
-    def _forward(self, Y, Y_Hat):
+    def _compute_loss(self, Y, Y_Hat):
         """
         - computes the hinge_loss
         - hinge_loss (Y,Y_Hat) = max(0,1-Y*Y_Hat)
@@ -19,7 +17,7 @@ class HingeLoss(Function):
         """
         return np.maximum(0, 1 - (Y * Y_Hat))
 
-    def _calc_local_grad(self, Y, Y_Hat, x):
+    def _compute_local_grad(self, Y, Y_Hat):
         """
         - computes the grad of hinge_loss
         - ∇hinge_loss (Y,x) ={
@@ -32,7 +30,6 @@ class HingeLoss(Function):
         :return:
         :rtype:
         """
-        grad = 0
-        V = Y * Y_Hat
-        grad += 0 if V > 1 else (-Y * x)
+        grad = np.zeros_like(Y)
+        grad[self._cache > 0] = Y[self._cache > 0]
         return grad

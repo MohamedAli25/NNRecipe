@@ -1,4 +1,4 @@
-from nn_recipe.NN.__function import Function
+from .__loss_function import LossFunction
 import numpy as np
 import sys
 
@@ -8,9 +8,10 @@ import sys
 
 EPSILON = sys.float_info.epsilon
 
-class CrossEntropyLoss(Function):
 
-    def _forward(self, Y, Y_Hat):
+class CrossEntropyLoss(LossFunction):
+
+    def _compute_loss(self, Y, Y_Hat):
         """
           - computes the cross entropy loss
           -cross_entropy_loss=−(Ylog(Y_Hat)+(1−Y)log(1−Y_Hat))
@@ -21,7 +22,7 @@ class CrossEntropyLoss(Function):
         """
         return -(np.multiply(Y, np.log(Y_Hat + EPSILON)) + np.multiply((1-Y), (np.log(1-Y_Hat + EPSILON))))
 
-    def _calc_local_grad(self, Y, Y_Hat):
+    def _compute_local_grad(self, Y, Y_Hat):
         """
         - computes the grad of cross entropy loss
         - ∇ cross_entropy_loss_drv(Y,x) =
@@ -31,3 +32,4 @@ class CrossEntropyLoss(Function):
         :rtype:
         """
         return (-Y/(Y_Hat + EPSILON)) + (1-Y)/(1-Y_Hat + EPSILON)
+

@@ -2,7 +2,6 @@ from nn_recipe.NN.__function import Function
 import numpy as np
 
 
-
 class Softmax(Function):
     """
     Class represents the softmax activation function
@@ -24,6 +23,9 @@ class Softmax(Function):
         :return: softmax value at input x
         :rtype: np.ndarray
         """
-        total = np.sum(np.exp(x), axis=1, keepdims=True)
-        return (np.exp(x) / total)
+        expZ = np.exp(x)
+        return expZ / np.sum(expZ, axis=0)
 
+    def _calc_local_grad(self, x, *args, **kwargs):
+        total_sum = np.sum(np.exp(x))
+        return ((total_sum - np.exp(x))*np.exp(x))/(total_sum**2)
