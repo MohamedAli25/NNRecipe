@@ -20,13 +20,18 @@ class LossFunctionTypeError(Exception):
         super(LayerTypeError, self).__init__("Loss function object must be an instance of LossFunction class")
 
 
-def check_integer(value_to_check, error_msg):
-    if type(value_to_check) is not int or value_to_check <= 0:
-        raise TypeError(error_msg)
+def check_integer(value_to_check, error_msg, condition=None):
+    if type(value_to_check) is not int:
+        if condition is not None and not condition(value_to_check):
+            raise TypeError(error_msg)
+    return value_to_check
 
-def check_float(value_to_check, error_msg):
-    if type(value_to_check) is not float or value_to_check <= 0:
-        raise TypeError(error_msg)
+
+def check_float(value_to_check, error_msg, condition=None):
+    if type(value_to_check) is not float:
+        if condition is not None and not condition(value_to_check):
+            raise TypeError(error_msg)
+    return value_to_check
 
 
 __all__ = [
