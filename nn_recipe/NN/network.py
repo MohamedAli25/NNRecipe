@@ -154,8 +154,7 @@ class Network:
             # batch size equal to self.__batch_size
             while True:
                 for example_index in range(len(X)):
-                    x_batch = X[example_index].reshape(batch_size, X[example_index].shape[0])       # TODO spliting array
-                    print(x_batch.shape)
+                    x_batch = X[example_index].reshape(1, X[example_index].shape[0])       # TODO spliting array
                     out, loss = self.__propagate(x_batch, Y[example_index])
                     loss = np.sum(loss) / loss.shape[0]
                     if notify_func is not  None: notify_func(loss)
@@ -188,6 +187,8 @@ class Network:
         :rtype: Tuple[int, int]
         """
         out = self.evaluate(X)  # value of the forward path
+        print("out", out.shape)
+        exit()
         loss = self.__loss(Y, out)  # get loss value
         delta = self.__loss.local_grad  # get ∂loss/∂y
         # backpropagation path

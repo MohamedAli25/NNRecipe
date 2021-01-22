@@ -9,6 +9,9 @@ class Softmax(Function):
     >>> x = np.array([1, 2, 3])          # input vector
     >>> f = Softmax(x)                   # creating softmax object
     >>> print(f(x))                      # calculating softmax of the input
+
+    for more info about softmax implementation visit:   https://deepnotes.io/softmax-crossentropy
+https://aerinykim.medium.com/how-to-implement-the-softmax-derivative-independently-from-any-loss-function-ae6d44363a9d
     """
 
     def __init__(self):
@@ -23,9 +26,10 @@ class Softmax(Function):
         :return: softmax value at input x
         :rtype: np.ndarray
         """
-        expZ = np.exp(x)
-        return expZ / np.sum(expZ, axis=0)
+        expZ = np.exp(x - np.max(x))
+        out = expZ / np.sum(expZ, axis=0)
+        print("forward of softmax", out)
+        return out
 
     def _calc_local_grad(self, x, *args, **kwargs):
-        total_sum = np.sum(np.exp(x))
-        return ((total_sum - np.exp(x))*np.exp(x))/(total_sum**2)
+        print("from softmax", x.shape)
