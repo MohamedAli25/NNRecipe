@@ -11,5 +11,5 @@ class GD(Optimizer):
         self._learning_rate = learning_rate
 
     def optimize(self, layer, delta: np.ndarray) -> None:
-        layer.weights = layer.weights - self._learning_rate * np.dot(delta, layer.local_grad["dW"])
-        layer.bias = layer.bias - self._learning_rate * np.sum(delta) / delta.shape[1]
+        layer.weights = layer.weights - self._learning_rate * np.dot(delta, layer.local_grad["dW"]) / delta.shape[1]
+        layer.bias = layer.bias - self._learning_rate * delta / delta.shape[1]
