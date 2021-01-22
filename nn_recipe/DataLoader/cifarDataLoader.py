@@ -1,3 +1,5 @@
+import os
+
 from dataLoader import *
 import numpy as np
 
@@ -16,14 +18,14 @@ class CifarDataLoader(DataLoader):
             download (bool): A flag for downloading the dataset
                             (default is False)                      
         """
-        # os.chdir(root_path)
-        # for (url, md5) in self._resources:
-        #     filename = url.rpartition('/')[2]
-        #     if filename not in os.listdir(root_path) and download is True:
-        #         urllib.request.urlretrieve(''.join((url, tar)), os.path.join(root_path, tar))
-        #
-        #     with tarfile.open(os.path.join(root_path, filename)) as tar_object:
-        #         members = [file for file in tar_object if file.name in files]
+        os.chdir(root_path)
+        for (url, md5) in self._resources:
+            filename = url.rpartition('/')[2]
+            if filename not in os.listdir(root_path) and download is True:
+                urllib.request.urlretrieve(''.join((url, tar)), os.path.join(root_path, tar))
+
+            with tarfile.open(os.path.join(root_path, filename)) as tar_object:
+                members = [file for file in tar_object if file.name in files]
         self.rootPath = root_path
         self.trainData = None
         self.trainLabels = None
