@@ -17,7 +17,7 @@ https://aerinykim.medium.com/how-to-implement-the-softmax-derivative-independent
     def __init__(self):
         super(Softmax, self).__init__()
 
-    def _forward(self, x):
+    def _forward(self, x, y, *args, **kwargs):
         """
         - Calculates the probabilities of the output nodes
         - softmax(x) = exp(x) / sum(exp(x[i])) i: 0-->N, N: number of classes
@@ -28,8 +28,22 @@ https://aerinykim.medium.com/how-to-implement-the-softmax-derivative-independent
         """
         expZ = np.exp(x - np.max(x))
         out = expZ / np.sum(expZ, axis=0)
-        print("forward of softmax", out)
+        print(out.shape)
         return out
 
-    def _calc_local_grad(self, x, *args, **kwargs):
-        print("from softmax", x.shape)
+    def _calc_local_grad(self, x, y, *args, **kwargs):
+        # print(self._cache[np.argmax(y, axis=0)])
+        return np.multiply(self._cache[np.argmax(y, axis=0)][:,0].reshape((1,-1)), y-self._cache)
+
+"""
+# TODO Ask Eng/Rashad for this (we get dYtrue/dZ (vector) not dY/dZ (matrix)
+x -> column matrix
+YTrue = Y1
+[ yTrue(0 - Y0) ]             [ HH - Yi ]             [ 0 ]
+[ yTrue(1 - Y1) ] --> yTrue * [ HH - Yi ] --> Y[1] * ([ 1 ] - Y)
+[ yTrue(0 - Y2) ]             [ HH - Yi ]             [ 0 ]
+
+dYTrue/dZTrue = YTrue(1-YTrue)
+dYTrue/dZi = -YTrue*Yi
+
+"""
