@@ -1,8 +1,8 @@
-from src.opt.optimizer import optimizer
+from .optimizer import Optimizer
 import numpy as np
 
 
-class GDAdaDelta(optimizer):
+class GDAdaDelta(Optimizer):
     def __init__(self,roh, *args, **kwargs):
         super(AdaDelta, self).__init__(*args, **kwargs)
         self.__roh = roh
