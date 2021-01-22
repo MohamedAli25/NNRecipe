@@ -1,6 +1,6 @@
 from nn_recipe.NN.Layers import Linear
 from nn_recipe.NN.ActivationFunctions import Sigmoid, ReLU, LeakyReLU, Identity, Softmax
-from nn_recipe.NN.LossFunctions import CrossEntropyLoss, MeanSquaredLoss
+from nn_recipe.NN.LossFunctions import CrossEntropyLoss, MeanSquaredLoss, MClassLogisticLoss
 from nn_recipe.Opt import GD
 from nn_recipe.NN import Network
 from nn_recipe.utility import OneHotEncoder
@@ -25,29 +25,34 @@ Y = encoder.encode(Y)
 net = Network(
     layers=[
         Linear(in_dim=784, out_dim=25, activation=Sigmoid()),
-        Linear(in_dim=25, out_dim=10, activation=Softmax())
+        Linear(in_dim=25, out_dim=10, activation=Identity())
     ],
     optimizer=GD(learning_rate=0.003),
-    loss_function=CrossEntropyLoss(sum=True, axis=1),
+    loss_function=MClassLogisticLoss(sum=True, axis=0),
 )
-
+# print(Y.shape)
 net.train(X, Y, notify_func=print, batch_size=10000, max_itr=3)
+
 
 # # TODO Bugs needed to be solved: Batch size spliting array
 # # TODO implement softmax layer
 #
 #
-# X = np.array([[1, 1, 1]])
-# loss = Softmax()
+X = np.array([[5],
+              [6],
+              [7]])
+loss = MClassLogisticLoss()
 # print(loss(X))
-
-
-
+#
+#
+#
 # OneHotEncoder testing
-# Y = np.array([["Mohamed"], ["Ali"], ["Ahmed"]])
-# encoder = OneHotEncoder(
-#     types=["Mohamed", "Ahmed", "Ali"],
-# )
-# out = encoder.encode(Y)
-# print("encoded", out)
-# print("decoded", encoder.decode(out))
+Y = np.array([["Ahmed"]])
+
+encoder = OneHotEncoder(
+    types=["Mohamed", "Ahmed", "Ali"],
+)
+
+encoded_Y = encoder.encode(Y).T
+loss(encoded_Y, X)
+

@@ -1,6 +1,8 @@
 from nn_recipe.NN.__function import Function
 import numpy as np
 
+# TODO needs to be edited soon
+
 
 class Softmax(Function):
     """
