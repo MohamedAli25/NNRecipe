@@ -1,4 +1,4 @@
-from .Rms_Nesterov import GDNestrov
+from src.opt.Rms_Nesterov import GDNestrov
 import numpy as np
 
 

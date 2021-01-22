@@ -1,4 +1,4 @@
-from .optimizer import Optimizer
+from src.opt.optimizer import Optimizer
 import numpy as np
 
 

@@ -1,4 +1,4 @@
-from .gd import GD
+from src.opt.GD import GD
 import numpy as np
 
 

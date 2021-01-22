@@ -1,10 +1,10 @@
-from optimizer import Optimizer
+from src.opt.optimizer import optimizer
 import numpy as np
 
 
-class GDAdaDelta(Optimizer):
+class GDAdaDelta(optimizer):
     def __init__(self,roh, *args, **kwargs):
-        super(GDAdaDelta, self).__init__(*args, **kwargs)
+        super(AdaDelta, self).__init__(*args, **kwargs)
         self.__roh = roh
 
     def optimize(self, layer, delta: np.ndarray) -> None:
