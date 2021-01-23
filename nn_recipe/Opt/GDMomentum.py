@@ -7,8 +7,8 @@ class GDMomentum(GD):
         super(GDMomentum, self).__init__(*args, **kwargs)
         self._beta = beta
 
-    def optimize(self, y, layer, delta: np.ndarray, opt_type: str) -> None:
-        delta_w, delta_b = self.update_delta(y, layer, delta, opt_type)
+    def optimize(self, y, layer, delta: np.ndarray, opt_type: str, batch_size) -> None:
+        delta_w, delta_b = self.update_delta(y, layer, delta, opt_type, batch_size)
         if not hasattr(layer, "v"):
             layer.v = np.zeros_like(layer.weights)
             layer.vo = np.zeros_like(layer.bias)

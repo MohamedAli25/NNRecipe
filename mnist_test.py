@@ -37,10 +37,11 @@ import numpy as np
 # # TODO implement softmax layer
 #
 #
-X = np.array([[5, 6, 7],
-              [6, 7, 8]])
-loss = MClassLogisticLoss()
-# print(loss(X))
+# X = np.array([[0, 1, 2],
+#               [3, 4, 8]])
+X = np.arange(0, 16).reshape((4, 4, 1))
+loss = MClassLogisticLoss(sum=True)
+print(loss(X))
 #
 #
 #
@@ -54,4 +55,5 @@ encoder = OneHotEncoder(
 
 encoded_Y = encoder.encode(Y).T
 loss(encoded_Y, X)
+
 

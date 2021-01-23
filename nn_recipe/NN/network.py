@@ -192,7 +192,7 @@ class Network:
         # backpropagation path
         for layer in reversed(self.__layers):
             delta = np.multiply(delta.T, layer.local_grad["dZ"])  # delta * ∂y/∂z
-            self.__opt.optimize(layer, delta) # update weights and bias for a given layer
+            self.__opt.optimize(Y, layer, delta, batch_size=1, opt_type="multi_logistic") # update weights and bias for a given layer
             delta = np.dot(delta.T, layer.local_grad["dX"]) # update the accumulated gradient ∂loss/∂x
         return out, loss
 

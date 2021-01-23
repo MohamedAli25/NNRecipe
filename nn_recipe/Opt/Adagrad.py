@@ -6,8 +6,8 @@ class GDAdaGrad(GD):
     def __init__(self,*args, **kwargs):
         super(GDAdaGrad, self).__init__(*args, **kwargs)
 
-    def optimize(self, y, layer, delta: np.ndarray, opt_type: str) -> None:
-        delta_w, delta_b = self.update_delta(y, layer, delta, opt_type)
+    def optimize(self, y, layer, delta: np.ndarray, opt_type: str, batch_size) -> None:
+        delta_w, delta_b = self.update_delta(y, layer, delta, opt_type, batch_size)
         if not hasattr(layer, "a"):
             layer.a = np.zeros_like(layer.weights)
             layer.ao = np.zeros_like(layer.bias)
