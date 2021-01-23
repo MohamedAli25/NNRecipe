@@ -8,8 +8,14 @@ class  GDAdam(GDLeakyAdaGrad):
         self.__iteration_no = iteration_no
         self.__beta = beta
 
-    def optimize(self, y, layer, delta: np.ndarray, opt_type: str) -> None:
-        delta_w, delta_b = self.update_delta(y, layer, delta, opt_type)
+    def update_delta(self, layer, delta: np.ndarray):
+
+        delta_w = np.dot(delta, layer.local_grad["dW"]) / layer.weights.shape[1]
+        delta_b = np.sum(delta, axis=1).reshape(-1, 1) / delta.shape[1]
+        return delta_w,delta_b
+
+    def optimize(self, layer, delta: np.ndarray) -> None:
+        delta_w, delta_b = self.update_delta(layer, delta)
         if not hasattr(layer, "a"):
             layer.a = np.zeros_like(layer.weights)
             layer.ao = np.zeros_like(layer.bias)
