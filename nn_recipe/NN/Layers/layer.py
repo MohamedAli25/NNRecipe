@@ -6,7 +6,25 @@ import numpy as np
 from abc import abstractmethod
 from nn_recipe.NN.__function import Function
 from nn_recipe.utils.exceptions import ShapeError
+from enum import Enum, auto
 
+class PaddingType(Enum):
+    SAME = "SAME"
+    VALID = "VALID"
+    FULL = "FULL"
+
+class ActivationFunction(Enum):
+    LINEAR = auto()
+    SIGMOID = auto()
+    TANH = auto()
+    RELU = auto()
+    LEAKY_RELU = auto()
+
+class Initializer(Enum):
+    RANDOM_NORMAL = auto()
+    RANDOM_UNIFORM = auto()
+    ZEROS = auto()
+    ONES = auto()
 
 class Layer(Function):          # TODO add default value to activation type
     """
@@ -48,10 +66,10 @@ class Layer(Function):          # TODO add default value to activation type
             weights = kwargs["weights"]
             if type(weights) is not np.ndarray:
                 raise TypeError("Required type is numpy.ndarray but the given type is {}".format(str(type(weights))))
-            if self.weights.shape != weights.shape:
+            if self._weights.shape != weights.shape:
                 raise ShapeError(required_shape=str(self.weights.shape), given_shape=str(weights.shape))
             else:
-                self.weights = weights
+                self._weights = weights
         # Checking for bias initial values
         if "bias" in kwargs:
             bias = kwargs["bias"]
@@ -61,7 +79,6 @@ class Layer(Function):          # TODO add default value to activation type
                 raise ShapeError(required_shape=str(self._bias.shape), given_shape=str(bias.shape))
             else:
                 self._bias = bias
-
 
     @property
     def weights(self):
