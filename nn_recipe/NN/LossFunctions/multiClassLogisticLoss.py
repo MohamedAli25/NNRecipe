@@ -4,8 +4,7 @@ import numpy as np
 
 class MClassLogisticLoss(LossFunction):
     def _compute_loss(self, Y, Y_hat):
-        expZ = np.exp(Y_hat - np.max(Y_hat))
-        # softmax here is a row vector for each example
+        expZ = np.exp(Y_hat - np.max(Y_hat)) # softmax here is a row vector for each example
         self.__softmax_value = expZ / np.sum(expZ, axis=1).reshape(-1, 1)
         return -1*np.log(self.__softmax_value[0, np.argmax(Y, axis=1)])
 
