@@ -1,4 +1,4 @@
-from src.opt.GD import GD
+from .gd import GD
 import numpy as np
 
 
@@ -8,10 +8,11 @@ class GDExpDec(GD):
         self._iteration = iteration_no
         self._k = k
 
-    def optimize(self, layer, delta: np.ndarray) -> None:
-        self._learning_rate = self._learning_rate * np.exp(-self._k * self._iteration)
-        layer.weights = layer.weights - self._learning_rate * np.dot(delta, layer.local_grad["dW"])
-        layer.bias = layer.bias - self._learning_rate * np.sum(delta) / delta.shape[1]
+    def optimize(self, y, layer, delta: np.ndarray, opt_type: str) -> None:
+        delta_w, delta_b = self.update_delta(y, layer, delta, opt_type)
+        learning_rate = self._learning_rate * np.exp(-self._k * self._iteration)
+        layer.weights = layer.weights - learning_rate * delta_w
+        layer.bias = layer.bias - learning_rate * delta_b
 
 
 
