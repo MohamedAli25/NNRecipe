@@ -63,9 +63,8 @@ class Linear(Layer):
         :type x: np.ndarray
         :rtype: np.ndarray
         """
-        return {'X': x,
-                'output': self.__activation(np.dot(self._weights, x.T) + self._bias).T
-                }
+        return self.__activation(np.dot(self._weights, x.T) + self._bias).T
+
 
     def _calc_local_grad(self, x):
         """

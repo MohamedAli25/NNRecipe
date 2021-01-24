@@ -152,13 +152,16 @@ class Network:
         loss = None   # loss value to break if lower than epsilon
         if self.__batch_size is not None:
             # batch size equal to self.__batch_size
+            Xbatches = np.array_split(X, X.shape[0]/self.__batch_size)
+            Ybatches = np.array_split(Y, X.shape[0]/self.__batch_size)
             while True:
-                for example_index in range(len(X)):
-                    x_batch = X[example_index].reshape(1, X[example_index].shape[0])       # TODO spliting array
-                    out, loss = self.__propagate(x_batch, Y[example_index].reshape(-1, Y.shape[1]))
-                    loss = np.sum(loss) / loss.shape[0]
+                for batch_index in range(len(Xbatches)):
+                    x_batch = Xbatches[batch_index]
+                    y_batch = Ybatches[batch_index]
+                    out, loss = self.__propagate(x_batch, y_batch.reshape(-1, Y.shape[1]))
+                    loss = np.sum(loss) / self.__batch_size
                     if notify_func is not  None: notify_func(loss)
-                # if loss < epsilon: break
+                if loss < epsilon: break
                 if notify_func is not None: notify_func("*************************************************************")
                 iteration += 1
                 if iteration >= max_itr: break
