@@ -10,12 +10,6 @@ class LossFunction(Function):
         super(LossFunction, self).__init__()
         self.__sum = sum
         self.__axis = axis
-    
-    def __call__(self, x, Y_Hat, *args, **kwargs):
-        """Perform the function forward pass f(x), calculate the function gradient with respect to x"""
-        self._cache = self._forward(x, Y_Hat, *args, **kwargs)                 # forward pass
-        self.__grad = self._calc_local_grad(x, Y_Hat, *args, **kwargs)         # Gradient Calculation, caching
-        return self._cache
 
     def _forward(self, Y, Y_hat):
         loss = self._compute_loss(Y, Y_hat)

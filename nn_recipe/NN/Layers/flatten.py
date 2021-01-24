@@ -1,6 +1,9 @@
-from nn_recipe.NN.__function import Function
-class Flatten(Function):
+class Flatten:
     """Flattening layer for multidimentional input"""
+
+    def __call__(self, *args, **kwargs):
+        return self._forward(*args, **kwargs)
+
     def _forward(self, X):
         self._cache = X.shape
         return X.reshape(X.shape[0], 1, -1)

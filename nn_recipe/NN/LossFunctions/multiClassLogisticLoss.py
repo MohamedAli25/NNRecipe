@@ -39,6 +39,5 @@ class MClassLogisticLoss(LossFunction):
         return -1*np.log(self.__softmax_value[0, np.argmax(Y, axis=1)])
 
     def _compute_local_grad(self, Y, Y_Hat):
-        print("clled to calc")
         self.__softmax_value[range(self.__softmax_value.shape[0]), np.argmax(Y, axis=1)] -= 1
         return self.__softmax_value
