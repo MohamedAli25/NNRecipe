@@ -10,7 +10,7 @@ class PaddingType(Enum):
     FULL = "FULL"
 
 
-class MaxPool2D(Function):
+class MaxPool2D:
     def __init__(self, kernelSize, strides, padding=PaddingType.SAME, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.kernelSize = kernelSize if isinstance(kernelSize, tuple) else (kernelSize, kernelSize)
@@ -91,9 +91,9 @@ class MaxPool2D(Function):
         #             for kw in range(KW):
         #                 self._local_grad[h_offset+kh, w_offset+kw, :] = (x[h_offset+kh, w_offset+kw, :] >= output[h, w, :])
         # print(self._local_grad)
-        return {'output': output}
+        return output
 
-    def _calc_local_grad(self, dY):
+    def calc_local_grad(self, dY):
         """
         example:
         input:
@@ -139,7 +139,7 @@ class MaxPool2D(Function):
             'dY': self._local_grad * dY
         }
 
-class AvgPool2D(Function):
+class AvgPool2D:
     def __init__(self, kernelSize, strides, padding=PaddingType.SAME, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if isinstance(kernelSize, int):
@@ -183,7 +183,7 @@ class AvgPool2D(Function):
 
         return {'output': output}
 
-    def _calc_local_grad(self, dY):
+    def calc_local_grad(self, dY):
         dY = np.repeat(np.repeat(dY, repeats=self.kernel_size[0], axis=0),
         repeats=self.kernel_size[1], axis=1)
         n = x.shape[0]

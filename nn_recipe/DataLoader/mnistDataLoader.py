@@ -1,6 +1,8 @@
 import gzip
 import os
 
+from .dataLoader import DataLoader
+import gzip
 import numpy as np
 
 from dataLoader import DataLoader
@@ -123,7 +125,7 @@ class MNISTDataLoader(DataLoader):
 
 
 if __name__ == "__main__":
-    mnistDataLoader = MNISTDataLoader(download=False)
+    mnistDataLoader = MNISTDataLoader(download=True)
     mnistDataLoader.load()
     print("Labels: " + str(mnistDataLoader.get_label_names()))
     print(mnistDataLoader.get_train_data().shape)

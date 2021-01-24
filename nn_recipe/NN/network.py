@@ -125,7 +125,7 @@ class Network:
         check_integer(batch_size, "batch size value must be a positive real integer greater than zero")
         self.__batch_size = batch_size
 
-    def train(self, X, Y, batch_size=None, epsilon=0.1, max_itr=100, notify_func=None):
+    def train(self, X, Y, batch_size=None, epsilon=0.1, max_itr=100, notify_func=None, verify_func=None):
         """
         Train the network using the configurations added to the network
 
@@ -155,6 +155,7 @@ class Network:
         iteration = 0   # iteration number to break if greater than max_itr
         loss = None   # loss value to break if lower than epsilon
         opt_it = 0
+        wrong_classified_examples = X.shape[0]
         if self.__batch_size is not None:
             # batch size equal to self.__batch_size
             Xbatches = np.array_split(X, X.shape[0]/self.__batch_size)
@@ -163,32 +164,41 @@ class Network:
                 for batch_index in range(len(Xbatches)):
                     x_batch = Xbatches[batch_index]
                     y_batch = Ybatches[batch_index]
-                    out, loss = self.__propagate(x_batch, y_batch.reshape(-1, Y.shape[1]), opt_it)
+                    out, loss = self.__propagate(x_batch, y_batch.reshape(-1, Y.shape[1]), opt_it, X.shape[0])
                     opt_it += 1
                     loss = np.sum(loss) / self.__batch_size
                     if notify_func is not  None: notify_func(loss)
+                for layer in self.__layers:
+                    self.__opt.flush(layer)
+                if verify_func is not None:
+                    error = verify_func()
+                    print(error)
+                    if error < wrong_classified_examples: wrong_classified_examples = error
+                    else: break
                 if loss < epsilon: break
-                # if notify_func is not None: notify_func("***********************************************************")
                 iteration += 1
                 if iteration >= max_itr: break
         else:
             # batch size equal to number of input examples
             while True:
-                out, loss = self.__propagate(X, Y, opt_it)
+                out, loss = self.__propagate(X, Y, opt_it, X.shape[0])
                 opt_it += 1
                 loss = np.sum(loss) / loss.shape[0]
                 if notify_func is not None: notify_func(loss)
                 # if loss < epsilon: break
                 iteration += 1
-                # if notify_func is not None: notify_func("*************************************************************")
+                for layer in self.__layers:
+                    self.__opt.flush(layer)
+                if verify_func is not None:
+                    error = verify_func()
+                    print(error)
+                    if error < wrong_classified_examples: wrong_classified_examples = error
+                    else: break
                 if iteration >= max_itr: break
-
-        for layer in self.__layers:
-            self.__opt.flush(layer)
 
         return loss, iteration
 
-    def __propagate(self, X, Y, opt_it):
+    def __propagate(self, X, Y, opt_it, number_of_examples):
         """
         This function executes the forward path and the backward path for a one iteration
 
@@ -205,7 +215,8 @@ class Network:
         # backpropagation path
         for layer in reversed(self.__layers):
             delta = np.multiply(delta.T, layer.local_grad["dZ"])  # delta * ∂y/∂z
-            self.__opt.optimize(layer, delta, iteration=opt_it) # update weights and bias for a given layer
+            self.__opt.optimize(layer, delta, iteration=opt_it,
+                                 number_of_examples=number_of_examples) # update weights and bias for a given layer
             delta = np.dot(delta.T, layer.local_grad["dX"]) # update the accumulated gradient ∂loss/∂x
         return out, loss
 
