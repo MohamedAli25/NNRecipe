@@ -12,6 +12,7 @@ import numpy as np
 class PaddingType(Enum):
     SAME = "SAME"
     VALID = "VALID"
+    FULL = "FULL"
 
 
 class ActivationFunction(Enum):
@@ -54,26 +55,17 @@ class Conv2D():
             self._bias = np.zeros((self.filters, 1))
             try:
                 self._weights = kwargs["filters_values"].reshape((filters, *kernelSize, inChannels))
+                print("\nweights", self._weights.shape)
             except ValueError:
                 self._weights = np.empty((filters, *kernelSize, inChannels))
+                print("\nweights2", self._weights.shape)
                 for i in range(filters):
                     self._weights[i] = kwargs['filters_values']
-        
-        # if "useBias" not in kwargs:
-        #     kwargs["useBias"] = True
-        # self.useBias = kwargs["useBias"]
 
-        # if "kernelInitializer" not in kwargs:
-        #     kwargs["kernelInitializer"] = True
-        # self.kernelInitializer = kwargs["kernelInitializer"]
-
-        # if "biasInitializer" not in kwargs:
-        #     kwargs["biasInitializer"] = True
-        # self.biasInitializer = kwargs["biasInitializer"]
 
     def __call__(self, x, *args, **kwargs):
         """Perform the function forward pass f(x), calculate the function gradient with respect to x"""
-        self._cache = self._forward(x, *args, **kwargs)                 # forward pass
+        self._cache = self._forward(x, *args, **kwargs)                     # forward pass
         # self._grad = self._calc_local_grad(x, dY,*args, **kwargs)         # Gradient Calculation, caching
         return self._cache
 
@@ -81,10 +73,11 @@ class Conv2D():
         """ Initializing the parameters that will be used by the layer object (bias, weights) """
         factor = np.sqrt(1/(self.inChannels * self.filters))
         self._bias = np.zeros((self.filters, 1))
+        # self._weights = np.random.randn(self.filters, self.kernelSize[0], self.kernelSize[1], self.inChannels)
         self._weights = np.random.normal(0, factor, (self.filters, self.kernelSize[0], self.kernelSize[1], self.inChannels))
         # print(self._weights)
 
-    def generate_initial_input_and_output(self, x, outChannels, kernelSize, strides, padding: PaddingType):
+    def generate_initial_input_and_output(self, x, outChannels, kernelSize, strides, padding):
         if len(x.shape) == 3:   # one image
             height, width, inChannels = x.shape
             batch_size = 1
@@ -128,15 +121,16 @@ class Conv2D():
                     if heightEnd > self._newInput.shape[1]:
                         break
                     for j in range(outputWidth):
-                        widthStart = j * self.strides[1]    # 30    30:31
-                        widthEnd = widthStart + self.kernelSize[1]  # 30 + 5
+                        widthStart = j * self.strides[1]    
+                        widthEnd = widthStart + self.kernelSize[1]
                         if widthEnd > self._newInput.shape[2]:
                             break
-                        window = self._newInput[b, heightStart:heightEnd, widthStart:widthEnd, :]
+                        window = self._newInput[b, heightStart:heightEnd, widthStart:widthEnd, ch]
                         # print(b, ch, i, j, self._weights[ch].shape, window.shape, self._bias[ch].shape)
-                        output[b, i, j, ch] = np.sum(self._weights[ch]*window) + self._bias[ch]
+                        output[b, i, j, ch] = np.sum(self._weights[b, :, :, ch]*window) #+ self._bias[ch]
                 
         return np.maximum(output, 0)
+        
     def _convolute(self, a, b, convType="NORMAL"):
         """
         a: to be padded variable 
@@ -147,8 +141,8 @@ class Conv2D():
         kernelSize = b.shape[1:3]
         if convType=="FULL":
             paddedInput, output, _ = self.generate_initial_input_and_output(a, self.inChannels, kernelSize, self.strides, "FULL")
-            print("paddedInput", paddedInput.shape, paddedInput)
-            print("output", output.shape, output)
+            # print("paddedInput", paddedInput.shape, paddedInput)
+            # print("output", output.shape, output)
         if convType=="NORMAL":
             paddedInput, output, _ = self.generate_initial_input_and_output(a, self.inChannels, kernelSize, self.strides, self.padding)
         
@@ -174,8 +168,7 @@ class Conv2D():
         """
         Backpropagation in convolutional layer
             1. dW: ∂L/∂W = convolution between (padded input x, ∂L/∂Y)
-            2. dX: ∂Z/∂X = full convolution between (filter rotatated 180°, ∂L/∂Y)
-            3. dZ: ∂Y/∂Z = activation gradient
+            2. dX: ∂L/∂X = full convolution between (filter rotatated 180°, ∂L/∂Y)
             where Y is the output of the convolution layer in the forward pass
         """
         return {
@@ -184,7 +177,6 @@ class Conv2D():
             # self._convolute(x, self._weights)
         }
     
-
     @property
     def weights(self):
         """ Layer's weights getter"""

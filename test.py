@@ -1,12 +1,15 @@
 import numpy as np
 from nn_recipe.NN.Layers.pooling import*
 from nn_recipe.NN.Layers.conv import Conv2D
-# from nn_recipe.NN.ActivationFunctions.sigmoid import Sigmoid
+from nn_recipe.NN.Layers.linear import Linear
+from nn_recipe.NN.ActivationFunctions.sigmoid import Sigmoid
 # from nn_recipe.NN.LossFunctions.meanSquared import MeanSquaredLoss
 # from nn_recipe.NN.Op import GD
-
+from nn_recipe.NN.Layers.flatten import Flatten
 from nn_recipe.NN import Network
 from PIL import Image
+import time
+
 
 # x = np.array([
 #     [1, 1],
@@ -58,28 +61,13 @@ from PIL import Image
 # print(l2.weights)
 # print(l2.bias)
 # print(l2(l1(np.array([[5,5]]))))
-"""MaxPooling test
-img = Image.open(r'E:\\Engineering_courses\\Senior\\NN\\Project\\andrew2.jpeg') #.convert('LA')
-p1 = MaxPool2D(kernelSize=3, strides=2, padding=PaddingType.SAME)
-# print(np.array(img).shape)
-p1_out = p1(np.array(img))
-# in_p = np.arange(1, 10).reshape((3,3,1))
-# print(in_p)
-# print(p1_out)
-Image.fromarray(np.uint8(p1_out)).show()
+
 """
-# img = Image.open(r'E:\\Engineering_courses\\Senior\\NN\\Project\\andrew_lenet.jpeg') #.convert('LA')
-# conv1 = Conv2D(inChannels=3, filters=3, strides=(1, 1), kernelSize=(5,5), padding="VALID")
-# conv_out = conv1(np.array(img))
-# print(conv_out.shape)
-# Image.fromarray(conv_out[0, :, :, :]).show()
-# print(np.array(img).shape)
-import matplotlib.pyplot as plt
 # fig, ax = plt.subplots(nrows=0,ncols=6)
 ex = np.arange(0, 16).reshape((4,4,1))
-fltr = np.array([[0,1,0],[0,1,0],[0,1,0]]).reshape((1,3,3,1))
-print(fltr.shape)
-dL = np.array([[-4,-2],[3,-5]]).reshape((1,2,2,1))
+fltr = np.array([[0,1,0],[0,1,0],[0,1,0]]).reshape((1,3,3,3))
+#print(fltr.shape)
+#dL = np.array([[-4,-2],[3,-5]]).reshape((1,2,2,1))
 # print(fltr.shape)
 conv_ex = Conv2D(inChannels=1, filters=1, filters_values=fltr, padding="VALID")
 conv_out = conv_ex(ex)
@@ -92,3 +80,35 @@ print(conv_ex._calc_local_grad(dL))
 #     plt.imshow(conv_out[0, :, :, i-1])
 # plt.imshow(conv_out[0])
 # plt.show()
+"""
+#   ------------------------------------------------
+
+# ex = np.arange(0, 16).reshape((4,4))
+# temp = np.empty((1, 4, 4, 3))
+# for i in range(3):
+#     temp[0, :, :, i] = ex
+fltr = np.array([[0,0,0],[0,1,0],[0,0,0]]).reshape((1,3,3,1))
+sobel_fltr = np.array([[-1, 0, 1],[-2, 0, 2],[-1, 0, 1]]).reshape((1,3,3,1))
+blur_fltr = np.ones((1,3,3,1))/9
+edge_fltr = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]]).reshape((1,3,3,1))
+img = Image.open(r'E:\\Engineering_courses\\Senior\\NN\\Project\\andrew2.jpeg').convert("RGB")
+
+
+conv_ex = Conv2D(inChannels=3, filters=3, padding="VALID")
+t2 = time.time()
+conv_out = conv_ex(np.array(img))    # temp
+Image.fromarray(conv_out[0].astype(np.uint8) ,"RGB").show()
+
+# pooling
+p1 = MaxPool2D(kernelSize=3, strides=2, padding="VALID")
+p1_out = p1(conv_out)
+Image.fromarray(p1_out['output'][0].astype(np.uint8) ,"RGB").show()
+flat = Flatten()
+f_out = flat(p1_out['output'])
+b, _, cols = f_out.shape
+# print (s1*s2*n_c) 
+l1 = Linear(in_dim=cols, out_dim=3, activation=Sigmoid())
+print('time taken', time.time()-t2)
+print(l1(f_out[0]))
+
+
