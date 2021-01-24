@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class Optimizer(ABC):
     @abstractmethod
-    def optimize(self, y, layer, delta, opt_type: str, batch_size):
+    def optimize(self, y, layer, delta, opt_type: str, batch_size=1):
         pass
 
     class LearningRateValueError(Exception):

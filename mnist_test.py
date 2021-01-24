@@ -39,18 +39,32 @@ import numpy as np
 #
 # X = np.array([[0, 1, 2],
 #               [3, 4, 8]])
-X = np.arange(0, 16).reshape((4, 4, 1))
+
 loss = MClassLogisticLoss(sum=True)
-print(loss(X))
-#
-#
-#
+# X = np.array(
+#     [
+#         np.arange(0, 9).reshape((3, 3, 1)),
+#         np.arange(0, 9).reshape((3, 3, 1))
+#     ]
+# )
+X = np.array(
+    [[
+        np.array([1,2,5]),
+        np.array([3,2,1])
+    ],
+    [
+        np.array([5,2,9]),
+        np.array([4,2,3])
+    ]]
+)
+# print(X.reshape(1,2,3,1))
+print(X.shape)
 # OneHotEncoder testing
-Y = np.array([["Ahmed"],
-              ["Ali"]])
+Y = np.array([["Yellow"],
+              ["Blue"]])
 
 encoder = OneHotEncoder(
-    types=["Mohamed", "Ahmed", "Ali"],
+    types=["Red", "Blue", "Yellow"],
 )
 
 encoded_Y = encoder.encode(Y).T
