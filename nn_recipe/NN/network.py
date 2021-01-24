@@ -125,7 +125,7 @@ class Network:
         check_integer(batch_size, "batch size value must be a positive real integer greater than zero")
         self.__batch_size = batch_size
 
-    def train(self, X, Y, batch_size=None, max_itr=100, notify_func=None, validate_callback=None):
+    def train(self, X, Y, batch_size=None, epsilon=0.1, max_itr=100, notify_func=None):
         """
         Train the network using the configurations added to the network
 
@@ -136,6 +136,8 @@ class Network:
         :param batch_size: batch size that will be used in the training process, if None the batch size will be equal
                 to the number of the input examples
         :type batch_size: int
+        :param epsilon: Value that will be compared to the loss to stop training
+        :type epsilon: int
         :param max_itr: maximum number of iteration to be executed
         :type max_itr: int
         :notify_func: callback function used to report loss after training an epoch
@@ -144,6 +146,7 @@ class Network:
         :rtype: Tuple[int, int]
         """
         # type checking for input configurations
+        check_float(epsilon, "epsilon size value must be a positive real float greater than zero")
         check_integer(max_itr, "max_itr size value must be a positive real integer greater than zero")
         if batch_size is not None:
             check_integer(batch_size, "batch size value must be a positive real integer greater than zero")
@@ -163,10 +166,10 @@ class Network:
                     out, loss = self.__propagate(x_batch, y_batch.reshape(-1, Y.shape[1]), opt_it)
                     opt_it += 1
                     loss = np.sum(loss) / self.__batch_size
-                    if notify_func is not None: notify_func(loss)
+                    if notify_func is not  None: notify_func(loss)
+                if loss < epsilon: break
+                # if notify_func is not None: notify_func("***********************************************************")
                 iteration += 1
-                if validate_callback is not None:
-                    validate_callback()
                 if iteration >= max_itr: break
         else:
             # batch size equal to number of input examples
@@ -175,7 +178,9 @@ class Network:
                 opt_it += 1
                 loss = np.sum(loss) / loss.shape[0]
                 if notify_func is not None: notify_func(loss)
+                # if loss < epsilon: break
                 iteration += 1
+                # if notify_func is not None: notify_func("*************************************************************")
                 if iteration >= max_itr: break
 
         for layer in self.__layers:
@@ -220,11 +225,10 @@ class Network:
         if feed.shape[1] == 1:
             return feed
         else:
-            print(feed[0])
             chosen_classes = np.argmax(feed, axis=1)
             out = np.zeros_like(feed)
             out[range(feed.shape[0]), chosen_classes] = 1
-            return feed
+            return out
 
     def save(self, path:str):
         """
