@@ -18,50 +18,15 @@ encoder = OneHotEncoder(
     inactive_state=0
 )
 Y = encoder.encode(Y)
-
-net = Network(
-    layers=[
-        Linear(in_dim=784, out_dim=25, activation=Sigmoid()),
-        Linear(in_dim=25, out_dim=10, activation=Identity())
-    ],
-    optimizer=GD(learning_rate=0.001),
-    loss_function=MClassLogisticLoss(sum=True, axis=0),
-)
-loss, itr = net.train(X, Y, notify_func=print, batch_size=1, max_itr=100)
-print(loss)
-print(itr)
-
-# l1 = Linear(in_dim=784, out_dim=10, activation=Identity())
-# loss = MClassLogisticLoss()
 #
-# for example_index in range(1, len(X)):
-#     example_x = X[example_index,:].reshape(1, -1)
-#     example_y = Y[example_index,:].reshape(1, -1)
-#     out = l1(example_x)
-#     print(loss(example_y, out))
-#     print(loss.local_grad)
-
-
-
-# for example in X:
-#     example = example.reshape()
-
-# X = np.array([[5, 6, 7],
-#               [5, 6, 7]])
-# loss = MClassLogisticLoss()
-# # print(loss(X))
-# #
-# #
-# #
-# # OneHotEncoder testing
-# Y = np.array([["Ahmed"],
-#               ["Ali"]])
-#
-# encoder = OneHotEncoder(
-#     types=["Mohamed", "Ahmed", "Ali"],
+# net = Network(
+#     layers=[
+#         Linear(in_dim=784, out_dim=25, activation=Sigmoid()),
+#         Linear(in_dim=25, out_dim=10, activation=Identity())
+#     ],
+#     optimizer=GD(learning_rate=0.001),
+#     loss_function=MClassLogisticLoss(sum=True, axis=0),
 # )
-#
-# encoded_Y = encoder.encode(Y)
-# print(loss(encoded_Y, X))
-# print(loss.local_grad)
-#
+net = Network.load("C:\\Users\\mgtmP\\Desktop\\mnist_net.net")
+loss, itr = net.train(X, Y, notify_func=print, batch_size=1, max_itr=10)
+net.save("C:\\Users\\mgtmP\\Desktop\\mnist_net.net")

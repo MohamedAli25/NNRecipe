@@ -3,6 +3,8 @@ import numpy as np
 
 
 class HingeLoss(LossFunction):
+    ID = 1
+
     def __init__(self):
         super(HingeLoss, self).__init__()
 

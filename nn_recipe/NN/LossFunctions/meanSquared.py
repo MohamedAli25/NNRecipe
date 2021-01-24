@@ -3,6 +3,8 @@ import numpy as np
 
 
 class MeanSquaredLoss(LossFunction):
+    ID = 2
+
     def _compute_loss(self, Y, Y_hat):
         """
         Args:

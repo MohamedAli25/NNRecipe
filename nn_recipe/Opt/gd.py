@@ -1,8 +1,14 @@
-from.optimizer import Optimizer
+from.__optimizer import Optimizer
 import numpy as np
 
 
 class GD(Optimizer):
+    @staticmethod
+    def load(data):
+        return GD(learning_rate=data["lr"])
+
+    ID = 0
+
     def __init__(self, learning_rate: float = 0.01, *args, **kwargs):
         if learning_rate <= 0:
             raise Optimizer.LearningRateValueError(learning_rate)
@@ -13,3 +19,9 @@ class GD(Optimizer):
     def optimize(self, layer, delta: np.ndarray) -> None:
         layer.weights = layer.weights - self._learning_rate * np.dot(delta, layer.local_grad["dW"])
         layer.bias = layer.bias - self._learning_rate * np.sum(delta, axis=1).reshape(-1, 1) / delta.shape[1]
+
+    def _save(self):
+        return {
+            "lr": self._learning_rate
+        }
+

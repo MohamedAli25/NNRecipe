@@ -1,6 +1,8 @@
 from __future__ import annotations
 import numpy as np
-from nn_recipe.NN.Layers.layer import Layer
+
+from nn_recipe.NN.ActivationFunctions.__factory import ActivationFunctionFactory
+from nn_recipe.NN.Layers.__layer import Layer
 from nn_recipe.NN.__function import Function
 
 
@@ -18,6 +20,14 @@ class Linear(Layer):
         2. dX: ∂Y/∂Z * ∂Z/∂X = activation gradient * W
         3. dB: ∂Y/∂Z * ∂Z/∂B = activation gradient * 1
     """
+
+    @staticmethod
+    def load(data):
+        act = ActivationFunctionFactory(data.pop("activation"))
+        return Linear(in_dim=data.pop("in_dim"), out_dim=data.pop("out_dim"), activation=act, **data)
+
+    ID = 0
+
     def __init__(self, in_dim, out_dim, activation, **kwargs):
         """
         Initializes the layer by calling base class constructor to create weights and bias and initialize them
@@ -84,4 +94,13 @@ class Linear(Layer):
             'dW': x,
             'dX': np.copy(self.weights),
             'dZ': self.__activation.local_grad
+        }
+
+    def _save(self):
+        return {
+            "in_dim": self._in_dim,
+            "out_dim": self._out_dim,
+            "activation": self.__activation.save(),
+            "bias": self._bias,
+            "weights": self._weights
         }

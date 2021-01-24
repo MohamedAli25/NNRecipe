@@ -105,4 +105,8 @@ class Layer(Function):  # TODO add default value to activation type
         out = self._save()
         out["ID"] = self.ID
         return out
-    
+
+    @staticmethod
+    @abstractmethod
+    def load(data):
+        pass

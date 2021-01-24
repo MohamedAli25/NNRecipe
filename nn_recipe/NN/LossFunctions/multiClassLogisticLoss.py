@@ -25,6 +25,8 @@ class MClassLogisticLoss(LossFunction):
     :ivar __softmax_value: Value of the softmax layer applied to the input
     :type __softmax_value: np.ndarray
     """
+    ID = 3
+
     def _compute_loss(self, Y, Y_hat):
         """
 

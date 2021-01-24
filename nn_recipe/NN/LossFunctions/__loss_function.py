@@ -4,6 +4,8 @@ import numpy as np
 
 
 class LossFunction(Function):
+    ID = -1
+
     def __init__(self, sum=False, axis=0):
         super(LossFunction, self).__init__()
         self.__sum = sum
@@ -32,3 +34,11 @@ class LossFunction(Function):
     @abstractmethod
     def _compute_local_grad(self, Y, Y_hat):
         pass
+
+
+    def save(self):
+        return {
+            "ID": self.ID,
+            "sum": self.__sum,
+            "axis": self.__axis
+        }
