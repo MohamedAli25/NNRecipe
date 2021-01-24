@@ -1,12 +1,16 @@
-from nn_recipe.NN.Layers.layer import Layer
-from nn_recipe.Opt.optimizer import Optimizer
-from nn_recipe.NN.__function import Function
+from nn_recipe.NN.Layers.__factory import LayerFactory
+from nn_recipe.NN.Layers.__layer import Layer
+from nn_recipe.NN.LossFunctions.__factory import LossFunctionFactory
+from nn_recipe.Opt.__factory import OptimizerFactory
+from nn_recipe.Opt.__optimizer import Optimizer
+from nn_recipe.NN.LossFunctions.__loss_function import LossFunction
 from nn_recipe.Opt.gd import GD
 from nn_recipe.NN.LossFunctions.meanSquared import MeanSquaredLoss
 from nn_recipe.utils.exceptions import *
 from nn_recipe.utils.exceptions import check_integer, check_float
 import numpy as np
 from typing import List, Tuple
+import pickle
 
 
 class Network:
@@ -25,8 +29,8 @@ class Network:
     ...     optimizer=GD(learning_rate=0.5),
     ... )
     >>> net.train()
-    >>> net.evaluate([1, 0.1, 0.5, 1.1])
-    >>> net.save("network")
+    >>> net.__feed_forward([1, 0.1, 0.5, 1.1])
+    >>> net._save()
 
     :note: The class have the implementation for backprop so you can use the layer objects directly if u want to
                 reimplement the backprop
@@ -36,7 +40,7 @@ class Network:
     :ivar __opt: Optimization object that will be used in weights update
     :type __opt: Optimizer
     :ivar __loss: Loss function that will be used to evaluate loss
-    :type __loss: Function
+    :type __loss: LossFunction
     :ivar __batch_size: batch size in the training
     :type __batch_size: ints
     """
@@ -48,7 +52,7 @@ class Network:
         :param optimizer: Optimizer object that will be used in the training process
         :type optimizer: Optimizer
         :param loss_function: Loss function that will be used to evaluate loss
-        :type loss_function: Function
+        :type loss_function: LossFunction
         :param batch_size: batch size in the training
         :type batch_size: int
         :raise ShapeError: When the layer have an input size not equal to the output size of the previous layer
@@ -108,7 +112,7 @@ class Network:
         :type loss_function: Function
         :raise LossFunctionTypeError: when the loss_function object is not a child of LossFunction  # TODO add Lossunction class
         """
-        if not issubclass(loss_function.__class__, Function):
+        if not issubclass(loss_function.__class__, LossFunction):
             raise LossFunctionTypeError()
         self.__loss = loss_function
 
@@ -150,32 +154,41 @@ class Network:
 
         iteration = 0   # iteration number to break if greater than max_itr
         loss = None   # loss value to break if lower than epsilon
+        opt_it = 0
         if self.__batch_size is not None:
             # batch size equal to self.__batch_size
+            Xbatches = np.array_split(X, X.shape[0]/self.__batch_size)
+            Ybatches = np.array_split(Y, X.shape[0]/self.__batch_size)
             while True:
-                for example_index in range(len(X)):
-                    x_batch = X[example_index].reshape(1, X[example_index].shape[0])       # TODO spliting array
-                    out, loss = self.__propagate(x_batch, Y[example_index].reshape(-1, Y.shape[1]))
-                    loss = np.sum(loss) / loss.shape[0]
+                for batch_index in range(len(Xbatches)):
+                    x_batch = Xbatches[batch_index]
+                    y_batch = Ybatches[batch_index]
+                    out, loss = self.__propagate(x_batch, y_batch.reshape(-1, Y.shape[1]), opt_it)
+                    opt_it += 1
+                    loss = np.sum(loss) / self.__batch_size
                     if notify_func is not  None: notify_func(loss)
-                # if loss < epsilon: break
-                if notify_func is not None: notify_func("*************************************************************")
+                if loss < epsilon: break
+                # if notify_func is not None: notify_func("***********************************************************")
                 iteration += 1
                 if iteration >= max_itr: break
         else:
             # batch size equal to number of input examples
             while True:
-                out, loss = self.__propagate(X, Y, iteration=iteration)
+                out, loss = self.__propagate(X, Y, opt_it)
+                opt_it += 1
                 loss = np.sum(loss) / loss.shape[0]
                 if notify_func is not None: notify_func(loss)
                 # if loss < epsilon: break
                 iteration += 1
-                if notify_func is not None: notify_func("*************************************************************")
+                # if notify_func is not None: notify_func("*************************************************************")
                 if iteration >= max_itr: break
+
+        for layer in self.__layers:
+            self.__opt.flush(layer)
 
         return loss, iteration
 
-    def __propagate(self, X, Y, **kwargs):
+    def __propagate(self, X, Y, opt_it):
         """
         This function executes the forward path and the backward path for a one iteration
 
@@ -186,29 +199,17 @@ class Network:
         :return: value of forward path and loss value
         :rtype: Tuple[int, int]
         """
-        out = self.evaluate(X)  # value of the forward path
+        out = self.__feed_forward(X)  # value of the forward path
         loss = self.__loss(Y, out)  # get loss value
         delta = self.__loss.local_grad  # get ∂loss/∂y
         # backpropagation path
         for layer in reversed(self.__layers):
             delta = np.multiply(delta.T, layer.local_grad["dZ"])  # delta * ∂y/∂z
-            self.__opt.optimize(Y, layer, delta, self.__batch_size, opt_type="multi_logistic") # update weights and bias for a given layer
+            self.__opt.optimize(layer, delta, iteration=opt_it) # update weights and bias for a given layer
             delta = np.dot(delta.T, layer.local_grad["dX"]) # update the accumulated gradient ∂loss/∂x
         return out, loss
 
-    def save(self):
-        pass
-
-    def open(self):
-        pass
-
-    def flush(self):
-        pass
-
-    def load_parameter(self):
-        pass
-
-    def evaluate(self, X):
+    def __feed_forward(self, X):
         """
         :param X: input examples
         :type X: np.ndarray
@@ -218,3 +219,34 @@ class Network:
         input_val = np.copy(X)
         for layer in self.__layers: input_val = layer(input_val)
         return input_val
+
+    def evaluate(self, X):
+        feed = self.__feed_forward(X)
+        if feed.shape[1] == 1:
+            return feed
+        else:
+            chosen_classes = np.argmax(feed, axis=1)
+            out = np.zeros_like(feed)
+            out[range(feed.shape[0]), chosen_classes] = 1
+            return out
+
+    def save(self, path:str):
+        """
+        Save the model into a pickle format
+        :param path: path where the model will be saved
+        """
+        data = {"loss": self.__loss.save(), "layers": [], "batch_size": self.__batch_size, "opt": self.__opt.save()}
+        for layer in self.__layers:
+            data["layers"].append(layer.save())
+        with open(path, 'wb') as handle:
+            pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    @staticmethod
+    def load(path:str):
+        with open(path, 'rb') as handle:
+            data = pickle.load(handle)
+        layers = LayerFactory(data["layers"])
+        loss_func = LossFunctionFactory(data["loss"])
+        batch_size = data["batch_size"]
+        opt = OptimizerFactory(data["opt"])
+        return Network(layers=layers, optimizer=opt, loss_function=loss_func, batch_size=batch_size)

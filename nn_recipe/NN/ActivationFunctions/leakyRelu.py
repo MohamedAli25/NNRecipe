@@ -1,7 +1,7 @@
-from nn_recipe.NN.__function import Function
+from .__activation import ActivationFunction
 import numpy as np
 
-class LeakyReLU(Function):
+class LeakyReLU(ActivationFunction):
     """
     Class represents the leaky relu activation function
 

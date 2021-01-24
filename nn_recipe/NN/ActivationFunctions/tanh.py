@@ -1,8 +1,8 @@
-from nn_recipe.NN.__function import Function
+from .__activation import ActivationFunction
 import numpy as np
 
 
-class Tanh(Function):
+class Tanh(ActivationFunction):
     """
     Class represents the tanh activation function
 

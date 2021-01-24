@@ -1,10 +1,10 @@
-from nn_recipe.NN.__function import Function
+from .__activation import ActivationFunction
 
 import numpy as np
 
 
 
-class HardTanh(Function):
+class HardTanh(ActivationFunction):
     """
     Class represents the hardtanh activation function
 

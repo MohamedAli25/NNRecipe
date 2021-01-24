@@ -10,6 +10,7 @@ EPSILON = sys.float_info.epsilon
 
 
 class CrossEntropyLoss(LossFunction):
+    ID = 0
 
     def _compute_loss(self, Y, Y_Hat):
         """
@@ -32,4 +33,7 @@ class CrossEntropyLoss(LossFunction):
         :rtype:
         """
         return (-Y/(Y_Hat + EPSILON)) + (1-Y)/(1-Y_Hat + EPSILON)
+
+    def _save(self):
+        return self.ID
 

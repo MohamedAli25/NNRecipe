@@ -1,8 +1,7 @@
-
-from nn_recipe.NN.__function import Function
+from .__activation import ActivationFunction
 import numpy as np
 
-class Sigmoid(Function):
+class Sigmoid(ActivationFunction):
     """
     Class represents the sigmoid activation function
 

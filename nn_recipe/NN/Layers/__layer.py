@@ -8,25 +8,8 @@ from nn_recipe.NN.__function import Function
 from nn_recipe.utils.exceptions import ShapeError
 from enum import Enum, auto
 
-class PaddingType(Enum):
-    SAME = "SAME"
-    VALID = "VALID"
-    FULL = "FULL"
 
-class ActivationFunction(Enum):
-    LINEAR = auto()
-    SIGMOID = auto()
-    TANH = auto()
-    RELU = auto()
-    LEAKY_RELU = auto()
-
-class Initializer(Enum):
-    RANDOM_NORMAL = auto()
-    RANDOM_UNIFORM = auto()
-    ZEROS = auto()
-    ONES = auto()
-
-class Layer(Function):          # TODO add default value to activation type
+class Layer(Function):  # TODO add default value to activation type
     """
     This Class represents a Layer in our Neural Network, the layer have _out_dim neurons and was connected to another
     layer with in_dim neurons
@@ -35,15 +18,17 @@ class Layer(Function):          # TODO add default value to activation type
         - Calculating the forward path
         - Calculating gradients that will be used to calculate backward path
     """
+    ID = -1
+
     def __init__(self, in_dim, out_dim, **kwargs):
         """ Initializes variables that will be used later by the Layer object"""
         # TODO add type checking for constructor input
-        super(Layer, self).__init__()                   # calling base class (Function) constructor
-        self._weights: np.ndarray = None                # weights matrix
-        self._bias: np.ndarray = None                   # bias matrix
-        self._in_dim = in_dim                           # input dimensions (number of neurons in the last layer)
-        self._out_dim = out_dim                         # output dimensions (number of neuron in the current layer)
-        self.__init_params(**kwargs)                    # initializing layer parameters
+        super(Layer, self).__init__()  # calling base class (Function) constructor
+        self._weights: np.ndarray = None  # weights matrix
+        self._bias: np.ndarray = None  # bias matrix
+        self._in_dim = in_dim  # input dimensions (number of neurons in the last layer)
+        self._out_dim = out_dim  # output dimensions (number of neuron in the current layer)
+        self.__init_params(**kwargs)  # initializing layer parameters
 
     @abstractmethod
     def _init_params(self):
@@ -111,3 +96,17 @@ class Layer(Function):          # TODO add default value to activation type
     @property
     def input_size(self):
         return self._in_dim
+
+    @abstractmethod
+    def _save(self):
+        pass
+
+    def save(self):
+        out = self._save()
+        out["ID"] = self.ID
+        return out
+
+    @staticmethod
+    @abstractmethod
+    def load(data):
+        pass

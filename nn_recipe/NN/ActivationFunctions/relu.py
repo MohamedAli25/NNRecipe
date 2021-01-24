@@ -1,8 +1,8 @@
-from nn_recipe.NN.__function import Function
+from .__activation import ActivationFunction
 import numpy as np
 
 
-class ReLU(Function):
+class ReLU(ActivationFunction):
     """
     Class represents the relu activation function
 
