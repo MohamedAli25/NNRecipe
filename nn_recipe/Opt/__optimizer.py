@@ -5,7 +5,7 @@ class Optimizer(ABC):
     ID = -1
 
     @abstractmethod
-    def optimize(self, layer, delta):
+    def optimize(self, layer, delta, *args, **kwargs):
         pass
 
     class LearningRateValueError(Exception):
@@ -17,6 +17,10 @@ class Optimizer(ABC):
         def __init__(self, learning_rate_type):
             message = "Optimizer learning rate must be a scalar real number current type is " + str(learning_rate_type)
             super().__init__(message)
+
+    @abstractmethod
+    def flush(self, layer):
+        pass
 
     @abstractmethod
     def _save(self):

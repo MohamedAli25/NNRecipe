@@ -32,6 +32,6 @@ encoder = OneHotEncoder(
 )
 yhat = encoder.decode(out)
 yhat = np.array(yhat).reshape((-1, 1))
-print(yhat - Y)
+print(np.count_nonzero(yhat - Y)/10)
 # print("######################################################################################")
 # print(Y)

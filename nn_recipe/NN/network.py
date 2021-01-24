@@ -154,6 +154,7 @@ class Network:
 
         iteration = 0   # iteration number to break if greater than max_itr
         loss = None   # loss value to break if lower than epsilon
+        opt_it = 0
         if self.__batch_size is not None:
             # batch size equal to self.__batch_size
             Xbatches = np.array_split(X, X.shape[0]/self.__batch_size)
@@ -162,27 +163,32 @@ class Network:
                 for batch_index in range(len(Xbatches)):
                     x_batch = Xbatches[batch_index]
                     y_batch = Ybatches[batch_index]
-                    out, loss = self.__propagate(x_batch, y_batch.reshape(-1, Y.shape[1]))
+                    out, loss = self.__propagate(x_batch, y_batch.reshape(-1, Y.shape[1]), opt_it)
+                    opt_it += 1
                     loss = np.sum(loss) / self.__batch_size
                     if notify_func is not  None: notify_func(loss)
                 if loss < epsilon: break
-                if notify_func is not None: notify_func("*************************************************************")
+                # if notify_func is not None: notify_func("***********************************************************")
                 iteration += 1
                 if iteration >= max_itr: break
         else:
             # batch size equal to number of input examples
             while True:
-                out, loss = self.__propagate(X, Y, iteration=iteration)
+                out, loss = self.__propagate(X, Y, opt_it)
+                opt_it += 1
                 loss = np.sum(loss) / loss.shape[0]
                 if notify_func is not None: notify_func(loss)
                 # if loss < epsilon: break
                 iteration += 1
-                if notify_func is not None: notify_func("*************************************************************")
+                # if notify_func is not None: notify_func("*************************************************************")
                 if iteration >= max_itr: break
+
+        for layer in self.__layers:
+            self.__opt.flush(layer)
 
         return loss, iteration
 
-    def __propagate(self, X, Y, **kwargs):
+    def __propagate(self, X, Y, opt_it):
         """
         This function executes the forward path and the backward path for a one iteration
 
@@ -199,7 +205,7 @@ class Network:
         # backpropagation path
         for layer in reversed(self.__layers):
             delta = np.multiply(delta.T, layer.local_grad["dZ"])  # delta * ∂y/∂z
-            self.__opt.optimize(layer, delta) # update weights and bias for a given layer
+            self.__opt.optimize(layer, delta, iteration=opt_it) # update weights and bias for a given layer
             delta = np.dot(delta.T, layer.local_grad["dX"]) # update the accumulated gradient ∂loss/∂x
         return out, loss
 

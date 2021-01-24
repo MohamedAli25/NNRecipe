@@ -1,7 +1,14 @@
 from . import *
 
 lookup = {
-    GD.ID: GD
+    GDAdaDelta.ID: GDAdaDelta,
+    GDAdaGrad.ID: GDAdaGrad,
+    GDAdam.ID: GDAdam,
+    GD.ID: GD,
+    GDExpDec.ID: GDExpDec,
+    GDInvDec.ID: GDInvDec,
+    GDMomentum.ID: GDMomentum,
+    GDLeakyAdaGrad.ID: GDLeakyAdaGrad
 }
 
 
