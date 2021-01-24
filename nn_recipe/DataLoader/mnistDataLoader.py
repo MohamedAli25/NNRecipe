@@ -2,7 +2,7 @@ import os
 import tarfile
 import urllib
 
-from dataLoader import DataLoader
+from .dataLoader import DataLoader
 import gzip
 import numpy as np
 
@@ -89,7 +89,7 @@ class MNISTDataLoader(DataLoader):
 
 
 if __name__ == "__main__":
-    mnistDataLoader = MNISTDataLoader(download=False)
+    mnistDataLoader = MNISTDataLoader(download=True)
     mnistDataLoader.load()
     print("Labels: " + str(mnistDataLoader.get_label_names()))
     print(mnistDataLoader.get_train_data().shape)

@@ -25,9 +25,11 @@ net = Network(
         Linear(in_dim=784, out_dim=25, activation=Sigmoid()),
         Linear(in_dim=25, out_dim=10, activation=Identity())
     ],
-    optimizer=GDAdam(learning_rate=0.001, roh=0.99, beta=0.5),
+    optimizer=GD(learning_rate=0.001),
     loss_function=MClassLogisticLoss(sum=True, axis=0),
 )
-net = Network.load("C:\\Users\\mgtmP\\Desktop\\mnist_net.net")
+# net = Network.load("C:\\Users\\mgtmP\\Desktop\\mnist_net.net")
+print(X)
 loss, itr = net.train(X, Y, notify_func=print, batch_size=1, max_itr=10)
+print(loss)
 # net.save("C:\\Users\\mgtmP\\Desktop\\mnist_net.net")
