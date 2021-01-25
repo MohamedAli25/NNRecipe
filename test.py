@@ -54,6 +54,6 @@ def main():
   print("Total Accuracy is :", 1-np.count_nonzero(yhat - Y_test)/Y_test.shape[0])
   plt.plot(net.errors)
   plt.xlabel('Number of Iterations')
-  plt.ylabel('Error')
+  plt.ylabel('Number of Misclassified Examples')
   plt.show()
 

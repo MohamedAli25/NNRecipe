@@ -174,7 +174,7 @@ class Network:
                 if verify_func is not None:
                     error = verify_func()
                     self.errors.append(error)
-                    print(error)
+                    print("Number of Misclassified Examples: {}".format(str(error)))
                     if error < wrong_classified_examples: wrong_classified_examples = error
                     else: break
                 if loss < epsilon: break
@@ -194,7 +194,7 @@ class Network:
                 if verify_func is not None:
                     error = verify_func()
                     self.errors.append(error)
-                    print(error)
+                    print("Number of Misclassified Examples: {}".format(str(error)))
                     if error < wrong_classified_examples: wrong_classified_examples = error
                     else: break
                 if iteration >= max_itr: break
