@@ -70,6 +70,7 @@ def main():
   edge_fltr = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]]).reshape((1,3,3,1))
   #print((os.path.join('', 'andrew2.jpeg')))
   img = Image.open(os.path.join('', 'andrew2.jpeg')).convert("RGB")
+  loss = MClassLogisticLoss()
 
   for epoch in range(10):
     print(f"epoch{epoch}")
