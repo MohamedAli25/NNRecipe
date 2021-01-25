@@ -5,7 +5,7 @@ from nn_recipe.Opt import *
 from nn_recipe.NN import Network
 import numpy as np
 from nn_recipe.utility import OneHotEncoder
-from nn_recipe.DataLoader.mnistDataLoader import MNISTDataLoaderz
+from nn_recipe.DataLoader.mnistDataLoader import MNISTDataLoader
 
 def main():
   net = Network(
@@ -51,3 +51,4 @@ def main():
   yhat = encoder.decode(out)
   yhat = np.array(yhat).reshape((-1, 1))
   print("Total Accuracy is :", 1-np.count_nonzero(yhat - Y_test)/Y_test.shape[0])
+
