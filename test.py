@@ -63,7 +63,7 @@ def main():
   plt.ylabel('Number of Misclassified Examples')
   plt.show()
   
-
+  """
   fltr = np.array([[0,0,0],[0,1,0],[0,0,0]]).reshape((1,3,3,1))
   sobel_fltr = np.array([[-1, 0, 1],[-2, 0, 2],[-1, 0, 1]]).reshape((1,3,3,1))
   blur_fltr = np.ones((1,3,3,1))/9
@@ -94,3 +94,4 @@ def main():
     delta = p1.calc_local_grad(delta)
     delta = conv1.calc_local_grad(delta['dY'])
     gd.optimize(layer=conv1, delta=delta['dW'])
+    """
