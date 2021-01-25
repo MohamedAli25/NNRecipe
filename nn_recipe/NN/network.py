@@ -66,6 +66,7 @@ class Network:
         # Set default values
         self.set_optimizer(optimizer)
         self.set_loss_function(loss_function)
+        self.errors = []
         if batch_size is not None: self.set_batch_size(batch_size)
         self.add_layers(layers)
 
@@ -172,6 +173,7 @@ class Network:
                     self.__opt.flush(layer)
                 if verify_func is not None:
                     error = verify_func()
+                    self.errors.push(error)
                     print(error)
                     if error < wrong_classified_examples: wrong_classified_examples = error
                     else: break
@@ -191,6 +193,7 @@ class Network:
                     self.__opt.flush(layer)
                 if verify_func is not None:
                     error = verify_func()
+                    self.errors.push(error)
                     print(error)
                     if error < wrong_classified_examples: wrong_classified_examples = error
                     else: break

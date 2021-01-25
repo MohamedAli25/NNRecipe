@@ -6,6 +6,7 @@ from nn_recipe.NN import Network
 import numpy as np
 from nn_recipe.utility import OneHotEncoder
 from nn_recipe.DataLoader.mnistDataLoader import MNISTDataLoader
+import matplotlib.pyplot as plt
 
 def main():
   net = Network(
@@ -39,10 +40,10 @@ def main():
   y_encoded = encoder.encode(Y)
 
   def verify():
-      f = net.evaluate(X_validate)
-      y_hat = encoder.decode(f)
-      y_hat = np.array(y_hat).reshape((-1, 1))
-      return np.count_nonzero(y_hat - Y_validate)
+    f = net.evaluate(X_validate)
+    y_hat = encoder.decode(f)
+    y_hat = np.array(y_hat).reshape((-1, 1))
+    return np.count_nonzero(y_hat - Y_validate)
 
   net.train(X, y_encoded, notify_func=None, batch_size=100, max_itr=50, verify_func=verify)
 
@@ -51,4 +52,8 @@ def main():
   yhat = encoder.decode(out)
   yhat = np.array(yhat).reshape((-1, 1))
   print("Total Accuracy is :", 1-np.count_nonzero(yhat - Y_test)/Y_test.shape[0])
+  plt.plot(net.errors)
+  plt.xlabel('Number of Iterations')
+  plt.ylabel('Error')
+  plt.show()
 
