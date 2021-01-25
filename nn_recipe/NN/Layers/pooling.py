@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import numpy as np
 from nn_recipe.NN.__function import Function
 from enum import Enum, auto
