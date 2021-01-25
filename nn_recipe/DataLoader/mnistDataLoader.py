@@ -3,7 +3,7 @@ import os
 
 import numpy as np
 
-from dataLoader import DataLoader
+from .dataLoader import DataLoader
 
 
 class MNISTDataLoader(DataLoader):
