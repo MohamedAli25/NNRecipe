@@ -5,13 +5,7 @@ from nn_recipe.Opt import *
 from nn_recipe.NN import Network
 import numpy as np
 from nn_recipe.utility import OneHotEncoder
-from nn_recipe.DataLoader.mnistDataLoader import MNISTDataLoader
-
-def verify():
-    f = net.evaluate(X_validate)
-    y_hat = encoder.decode(f)
-    y_hat = np.array(y_hat).reshape((-1, 1))
-    return np.count_nonzero(y_hat - Y_validate)
+from nn_recipe.DataLoader.mnistDataLoader import MNISTDataLoaderz
 
 def main():
   net = Network(
@@ -24,7 +18,7 @@ def main():
   )
 
   # net.save("C:\\Users\\mgtmP\\Desktop\\mnist_net.net")
-  mnist = MNISTDataLoader(rootPath="mnist")
+  mnist = MNISTDataLoader(rootPath="mnist", download=True)
   mnist.load()
   X = mnist.get_train_data().reshape((-1, 28*28))
   Y = mnist.get_train_labels().reshape((-1, 1))
@@ -44,6 +38,11 @@ def main():
   )
   y_encoded = encoder.encode(Y)
 
+  def verify():
+      f = net.evaluate(X_validate)
+      y_hat = encoder.decode(f)
+      y_hat = np.array(y_hat).reshape((-1, 1))
+      return np.count_nonzero(y_hat - Y_validate)
 
   net.train(X, y_encoded, notify_func=None, batch_size=100, max_itr=50, verify_func=verify)
 
