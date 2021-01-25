@@ -1,4 +1,3 @@
-from __future__ import annotations
 import numpy as np
 
 from nn_recipe.NN.ActivationFunctions.__factory import ActivationFunctionFactory
