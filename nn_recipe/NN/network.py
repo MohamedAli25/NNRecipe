@@ -173,7 +173,7 @@ class Network:
                     self.__opt.flush(layer)
                 if verify_func is not None:
                     error = verify_func()
-                    self.errors.push(error)
+                    self.errors.append(error)
                     print(error)
                     if error < wrong_classified_examples: wrong_classified_examples = error
                     else: break
@@ -193,7 +193,7 @@ class Network:
                     self.__opt.flush(layer)
                 if verify_func is not None:
                     error = verify_func()
-                    self.errors.push(error)
+                    self.errors.append(error)
                     print(error)
                     if error < wrong_classified_examples: wrong_classified_examples = error
                     else: break
