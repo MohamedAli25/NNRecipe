@@ -7,8 +7,14 @@ import numpy as np
 from nn_recipe.utility import OneHotEncoder
 from nn_recipe.DataLoader.mnistDataLoader import MNISTDataLoader
 import matplotlib.pyplot as plt
+import os
+from nn_recipe.NN.Layers.conv import Conv2D
+from PIL import Image
+from nn_recipe.NN.Layers.pooling import*
+from nn_recipe.NN.Layers.flatten import Flatten
 
 def main():
+  
   net = Network(
       layers=[
           Linear(in_dim=784, out_dim=25, activation=ReLU()),
@@ -56,4 +62,34 @@ def main():
   plt.xlabel('Number of Iterations')
   plt.ylabel('Number of Misclassified Examples')
   plt.show()
+  
 
+  fltr = np.array([[0,0,0],[0,1,0],[0,0,0]]).reshape((1,3,3,1))
+  sobel_fltr = np.array([[-1, 0, 1],[-2, 0, 2],[-1, 0, 1]]).reshape((1,3,3,1))
+  blur_fltr = np.ones((1,3,3,1))/9
+  edge_fltr = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]]).reshape((1,3,3,1))
+  #print((os.path.join('', 'andrew2.jpeg')))
+  img = Image.open(os.path.join('', 'andrew2.jpeg')).convert("RGB")
+
+  for epoch in range(10):
+    print(f"epoch{epoch}")
+    conv1 = Conv2D(inChannels=3, filters=3, filters_values=edge_fltr, padding="VALID")
+    conv_out = conv1(np.array(img))
+    p1 = MaxPool2D(kernelSize=3, strides=2, padding="SAME")
+    p1_out = p1(conv_out)
+    Image.fromarray(p1_out[0].astype(np.uint8) ,"RGB").show()
+    flat = Flatten()
+    f_out = flat(p1_out)
+    b, _, cols = f_out.shape
+    l1 = Linear(in_dim=cols, out_dim=3, activation=Sigmoid())
+    out = l1(f_out[0])
+    loss_val = loss(encoded_Y, out)
+    print("loss", loss_val)
+    delta = loss.local_grad
+    delta = np.multiply(delta.T, l1.local_grad["dZ"])  # delta * ∂y/∂z
+    gd.optimize(layer=l1, delta=delta)
+    delta = np.dot(delta.T, l1.local_grad["dX"])
+    delta = flat.calc_local_grad(delta)
+    delta = p1.calc_local_grad(delta)
+    delta = conv1.calc_local_grad(delta['dY'])
+    gd.optimize(layer=conv1, delta=delta['dW'])
